@@ -1,0 +1,44 @@
+{
+  "test_plan": [
+    {
+      "Objective": "Verify the hover interaction functionality of the Image element.",
+      "Scope": "Testing the display of the overlay triggered by hovering over the Image element (ID: 1:4738).",
+      "Test_Items": {
+        "Types_of_Testing": "Functional Testing, UI Testing, Interaction Testing.",
+        "Test_Approach": "Manually hover the mouse cursor over the Image element. Observe if the specified overlay appears and its presentation.",
+        "Acceptance_Criteria_for_each_item": [
+          "Hovering over the Image element should trigger an action.",
+          "The specified overlay (ID: 1:4805) should appear upon hovering.",
+          "The overlay should be correctly positioned and visible without obstructing crucial content.",
+          "The overlay should disappear when the mouse cursor moves away from the Image element."
+        ]
+      }
+    },
+    {
+      "Objective": "Verify the click interaction functionality of the Items frame.",
+      "Scope": "Testing that the 'Items' frame element (ID: 1:4743) is clickable and handles the click event without errors, despite a null destination.",
+      "Test_Items": {
+        "Types_of_Testing": "Functional Testing, Interaction Testing, Error Handling Testing.",
+        "Test_Approach": "Manually click on the 'Items' frame element. Observe if the application responds to the click or if any errors occur.",
+        "Acceptance_Criteria_for_each_item": [
+          "Clicking the 'Items' frame should be possible.",
+          "The application should not crash or display an error message when clicking the element with a null destination interaction."
+        ]
+      }
+    },
+    {
+      "Objective": "Verify the click interaction functionality of the Button text element, specifically the scroll-to action.",
+      "Scope": "Testing that clicking the 'Button' text element (ID: 1:5010) correctly initiates a scroll action to the target destination (ID: 1:5031).",
+      "Test_Items": {
+        "Types_of_Testing": "Functional Testing, Interaction Testing, Navigation Testing.",
+        "Test_Approach": "Manually click on the 'Button' text element. Observe the application's view to confirm the scroll action to the target area.",
+        "Acceptance_Criteria_for_each_item": [
+          "Clicking the 'Button' text should trigger a scroll action.",
+          "The view should smoothly scroll to the destination specified by ID 1:5031.",
+          "The area associated with destination ID 1:5031 should become visible in the viewport after the scroll completes.",
+          "The scrolling action should occur without unexpected behavior or errors."
+        ]
+      }
+    }
+  ]
+}
