@@ -9,10 +9,9 @@ def filter_component(figma_data: Dict[str, Any],feature_description: Optional[st
     def traverse(node: Dict[str, Any],parent_id : Any = None):
         interactions = node.get("interactions", [])
         table = node.get("styleOverrideTable", [])
-        children = node.get("children" , [])
 
         #keep element if not decorative
-        if (interactions or table or children) :  
+        if (interactions or table ) :  
             component = {
                 "parent_id": parent_id,
                 "id": node.get("id"),

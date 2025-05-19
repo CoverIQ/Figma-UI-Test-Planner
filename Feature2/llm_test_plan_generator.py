@@ -24,6 +24,7 @@ def generate_test_plan(figma_data: dict, api_key: str )->dict :
         model='gemini-2.5-flash-preview-04-17',  
         contents=f"""
 Given the following UI design, generate a test plan including objective, scope, test items, test types, test approaches, and acceptance criteria. 
+please generate a test plan for each objective .
 UI design in json format :{figma_data}
 
 """,
