@@ -2,11 +2,11 @@
 This system enables the automatic generation of high-level test plans and BDD-style test cases for new UI features based on design artifacts from Figma and optional feature descriptions. The goal is to streamline the QA process by integrating Figma design metadata with LLM-powered test reasoning.
 
 ##  Project Structure
-├── main.py # Main orchestrator script
-├── figma_frame_parser.py # Fetches and parses Figma design JSON
-├── feature_representation.py # Extracts interactive UI features
-├── llm_test_plan_generator.py # Creates test plan via Gemini API
-├── bdd_style_test_case_generator.py # Converts test plan into BDD test cases
+├── main.py # Main orchestrator script  
+├── figma_frame_parser.py # Fetches and parses Figma design JSON  
+├── feature_representation.py # Extracts interactive UI features  
+├── llm_test_plan_generator.py # Creates test plan via Gemini API  
+├── bdd_style_test_case_generator.py # Converts test plan into BDD test cases  
 
 
 ## Module Descriptions
