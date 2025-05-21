@@ -64,7 +64,7 @@ fig_url: Public Figma design/file URL
 --feature_path: (Optional) A plain text file describing the feature to enhance semantic extraction
 
 
-
+example figma url :https://www.figma.com/design/QVW3U2DciJIScCuUZQxdGK/test
 
 
 
