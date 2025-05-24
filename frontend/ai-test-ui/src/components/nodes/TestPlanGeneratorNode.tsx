@@ -6,9 +6,28 @@ interface TestPlanGeneratorNodeData {
   isFeatureReady: boolean;
 }
 
+interface TestItem {
+  Types_of_Testing: string;
+  Test_Approach: string;
+  Acceptance_Criteria_for_each_item: string[];
+}
+
+interface TestCase {
+  Objective: string;
+  Scope: string;
+  Test_Items: TestItem;
+}
+
+interface TestPlan {
+  test_plan: TestCase[];
+}
+
 export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGeneratorNodeData>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isGenerated, setIsGenerated] = useState(false);
+  const [testPlan, setTestPlan] = useState<TestPlan | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   const handleGenerate = async () => {
     setIsLoading(true);
@@ -38,15 +57,40 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
-      console.log('Test plan generated:', data);
-      // TODO: Handle the generated test plan data
+      setTestPlan(data);
+      setIsGenerated(true);
     } catch (err) {
       console.error('Error generating test plan:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate test plan');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/data/plan', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to download test plan');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'test-plan.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to download test plan');
     }
   };
 
@@ -74,6 +118,58 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
         {error && (
           <div className="mt-2 text-red-500 text-sm whitespace-pre-line">
             {error}
+          </div>
+        )}
+        {isGenerated && (
+          <div className="flex items-center gap-2 mt-2">
+            <div className="flex-1">
+              <p className="text-sm text-green-600">
+                ✓ Test plan generated successfully
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowPreview(!showPreview)}
+                className="px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm font-medium rounded flex items-center gap-1"
+              >
+                {showPreview ? 'Hide Preview' : 'Show Preview'}
+              </button>
+              <button
+                onClick={handleDownload}
+                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+        )}
+        {showPreview && testPlan && (
+          <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
+            {testPlan.test_plan.map((testCase, index) => (
+              <div key={index} className="border rounded p-3 bg-gray-50">
+                <h3 className="font-semibold text-blue-700">Objective {index + 1}</h3>
+                <p className="text-sm mt-1">{testCase.Objective}</p>
+                
+                <h4 className="font-medium text-gray-700 mt-2">Scope</h4>
+                <p className="text-sm mt-1">{testCase.Scope}</p>
+                
+                <h4 className="font-medium text-gray-700 mt-2">Test Items</h4>
+                <div className="text-sm mt-1">
+                  <p><span className="font-medium">Types of Testing:</span> {testCase.Test_Items.Types_of_Testing}</p>
+                  <p className="mt-1"><span className="font-medium">Test Approach:</span> {testCase.Test_Items.Test_Approach}</p>
+                  
+                  <h5 className="font-medium text-gray-700 mt-2">Acceptance Criteria:</h5>
+                  <ul className="list-disc list-inside mt-1 space-y-1">
+                    {testCase.Test_Items.Acceptance_Criteria_for_each_item.map((criteria, idx) => (
+                      <li key={idx} className="text-sm">{criteria}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
