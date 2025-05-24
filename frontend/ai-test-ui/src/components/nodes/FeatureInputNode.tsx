@@ -20,7 +20,7 @@ interface FeatureInputNodeProps {
     featureDesc: string;
     onFigmaUrlChange: (url: string) => void;
     onFeatureDescChange: (desc: string) => void;
-    onSubmit: () => void;
+    onFeatureReady: (ready: boolean) => void;
   };
 }
 
@@ -150,11 +150,22 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
     setIsGenerating(true);
     setGenerationError(null);
     try {
+      const figmaRes = await fetch('http://localhost:8000/data/figma', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!figmaRes.ok) {
+        throw new Error('Failed to fetch Figma data from server');
+      }
+
+      const figmaData = await figmaRes.json();
+
       const res = await fetch('http://localhost:8000/get-feature-representation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          figma_data: extractedData,
+          figma_data: figmaData,
           feature_description: localFeatureDesc
         }),
       });
@@ -166,10 +177,11 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
 
       await res.json();
       setIsGenerated(true);
-      data.onSubmit();
+      data.onFeatureReady(true);
     } catch (err) {
       console.error('Generation error:', err);
       setGenerationError(err instanceof Error ? err.message : 'Failed to generate feature representation');
+      data.onFeatureReady(false);
     } finally {
       setIsGenerating(false);
     }

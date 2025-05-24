@@ -13,10 +13,12 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import FeatureInputNode from './components/nodes/FeatureInputNode';
+import TestPlanGeneratorNode from './components/nodes/TestPlanGeneratorNode';
 import ApiKeyForm from './components/ApiKeyForm';
 
 const nodeTypes = {
   featureInput: FeatureInputNode,
+  testPlanGenerator: TestPlanGeneratorNode,
 };
 
 const initialEdges: Edge[] = [
@@ -56,15 +58,23 @@ const initialEdges: Edge[] = [
 ];
 
 const staticNodes: Node[] = [
-  { id: '4', data: { label: '🤖 LLM Test Plan Generator' }, position: { x: 650, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
-  { id: '5', data: { label: '📄 Markdown Test Plan Output' }, position: { x: 900, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
-  { id: '6', data: { label: '🧪 Gherkin Test Case Generator' }, position: { x: 1150, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
+  { 
+    id: '4', 
+    type: 'testPlanGenerator',
+    data: {},
+    position: { x: 500, y: 100 }, 
+    draggable: false, 
+    targetPosition: Position.Left, 
+    sourcePosition: Position.Right 
+  },
+  { id: '5', data: { label: '📄 Gherkin Test Case Generator' }, position: { x: 1000, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
+  { id: '6', data: { label: '🧪 Start Testing!' }, position: { x: 1400, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
 ];
 
 export default function App() {
   const [featureDesc, setFeatureDesc] = useState('');
   const [figmaUrl, setFigmaUrl] = useState('');
-  const [parsedData, setParsedData] = useState(null);
+  const [isFeatureReady, setIsFeatureReady] = useState(false);
 
   const handleApiKeySave = async (figmaToken: string, geminiKey: string) => {
     try {
@@ -100,33 +110,11 @@ export default function App() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!featureDesc.trim() || !figmaUrl.trim()) {
-      console.warn('Missing input: Feature description and Figma URL are required.');
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/parse', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: featureDesc, figma_url: figmaUrl }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      console.log('Parsed data:', data);
-      setParsedData(data);
-    } catch (error) {
-      console.error('API error:', error);
-      alert('Failed to fetch test plan. Check your inputs or server.');
-    }
-  };
-
   const initialNodes: Node[] = [
     {
       id: '1',
       type: 'featureInput',
-      position: { x: 0, y: -42 },
+      position: { x: 0, y: 100 },
       draggable: false,
       sourcePosition: Position.Top,
       data: {
@@ -134,14 +122,40 @@ export default function App() {
         featureDesc,
         onFigmaUrlChange: setFigmaUrl,
         onFeatureDescChange: setFeatureDesc,
-        onSubmit: handleSubmit,
+        onFeatureReady: setIsFeatureReady,
       },
     },
-    ...staticNodes,
+    ...staticNodes.map(node => {
+      if (node.id === '4') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isFeatureReady,
+          },
+        };
+      }
+      return node;
+    }),
   ];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+
+  useEffect(() => {
+    setNodes(nodes => nodes.map(node => {
+      if (node.id === '4') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isFeatureReady,
+          },
+        };
+      }
+      return node;
+    }));
+  }, [isFeatureReady, setNodes]);
 
   return (
     <div className="w-screen h-screen bg-slate-900">
