@@ -1,30 +1,126 @@
-# Contributing
-## Branching Strategy
-- main – stable production-ready code
-- dev – development integration branch
-- feature/xxx new features that are in progress
+# CoverIQ Test Assistant
 
-## How to Contribute
-1. Create a new branch from dev:
-```bash
-git checkout dev
-git pull
-git checkout -b feature/my-feature
+A tool that automatically generates test plans and test cases from Figma designs and feature descriptions.
+
+## Features
+
+- Generate test plans from Figma designs
+- Create BDD-style test cases
+- Interactive flow-based UI
+- Real-time test plan generation
+- Support for both Figma URL and feature description inputs
+
+## Prerequisites
+
+- Python 3.8 or higher
+- Node.js 16 or higher
+- npm or yarn
+- Figma Access Token
+- Google Gemini API Key
+
+## Environment Setup
+
+1. Create a `.env` file in the `backend` directory with the following variables:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+FIGMA_ACCESS_TOKEN=your_figma_access_token
 ```
 
-2. Commit and push your changes:
+## Installation
+
+### Backend Setup
+
+1. Navigate to the backend directory:
 ```bash
-git add .
-git commit -m "Add my feature"
-git push origin feature/my-feature
+cd backend
 ```
 
-3. Regularly pull from dev if you want to stay updated and reduce merge conflicts.
+2. Create a virtual environment (optional but recommended):
 ```bash
-git checkout feature/my-feature
-git pull origin dev
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-4. If you want to merge to dev, open a Pull Request to merge.
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-5. Notify other members to review and approve your pull request.
+4. Start the backend server:
+```bash
+uvicorn main:app --reload
+```
+
+The backend server will run on `http://localhost:8000`
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend/ai-test-ui
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173`
+
+## Usage
+
+1. Open your browser and navigate to `http://localhost:5173`
+2. In the Feature Input node:
+   - Enter your feature description
+   - Paste your Figma URL
+   - Click "Generate Test Plan"
+3. The Test Plan node will display:
+   - Generated test plan
+   - BDD-style test cases
+
+## Project Structure
+
+```
+CoverIQ-Test-Assistant/
+├── backend/
+│   ├── app/
+│   │   ├── routes.py
+│   │   └── services.py
+│   ├── Feature2/
+│   │   ├── bdd_style_test_case_generator.py
+│   │   ├── feature_representation.py
+│   │   ├── figma_frame_parser.py
+│   │   └── llm_test_plan_generator.py
+│   ├── main.py
+│   └── requirements.txt
+└── frontend/
+    └── ai-test-ui/
+        ├── src/
+        │   ├── components/
+        │   │   └── nodes/
+        │   │       ├── FeatureInputNode.tsx
+        │   │       └── TestPlanNode.tsx
+        │   └── App.tsx
+        └── package.json
+```
+
+## API Endpoints
+
+TBD
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

@@ -11,7 +11,7 @@ def filter_component(figma_data: Dict[str, Any],feature_description: Optional[st
         table = node.get("styleOverrideTable", [])
 
         #keep element if not decorative
-        if (interactions or table ) :  
+        if (interactions or table) :  
             component = {
                 "parent_id": parent_id,
                 "id": node.get("id"),
@@ -35,10 +35,10 @@ def filter_component(figma_data: Dict[str, Any],feature_description: Optional[st
             traverse(child,node.get("id"))
 
     # start from "document"
-    if "document" in figma_data:
-        traverse(figma_data["document"])
+    # if "document" in figma_data:
+    #     traverse(figma_data["document"])
     output = {
-        "figma_data" : results ,
+        "figma_data" : figma_data,
         "feature_description" : feature_description
     }
     
