@@ -237,7 +237,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
       <div>
         <label className="text-sm font-medium block">📝 Feature Description (Optional)</label>
         <textarea
-          className="mt-1 w-full p-2 border rounded text-sm resize-none overflow-y-scroll h-32 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600"
+          className="mt-1 w-full p-2 border rounded text-sm resize-none overflow-y-scroll h-32 bg-white dark:bg-gray-800 dark:text-white dark:border-gray-600 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500"
           placeholder="Enter feature description..."
           value={localFeatureDesc}
           onChange={handleFeatureDescChange}

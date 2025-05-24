@@ -35,7 +35,7 @@ export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
                 type="password"
                 value={figmaToken}
                 onChange={(e) => setFigmaToken(e.target.value)}
-                className="mt-1 w-full p-2 border rounded text-sm"
+                className="mt-1 w-full p-2 border rounded text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
                 placeholder="Enter Figma access token"
               />
             </div>
@@ -48,7 +48,7 @@ export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
                 type="password"
                 value={geminiKey}
                 onChange={(e) => setGeminiKey(e.target.value)}
-                className="mt-1 w-full p-2 border rounded text-sm"
+                className="mt-1 w-full p-2 border rounded text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
                 placeholder="Enter Gemini API key"
               />
             </div>
