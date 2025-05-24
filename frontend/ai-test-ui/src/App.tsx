@@ -214,7 +214,9 @@ export default function App() {
 
   return (
     <div className="w-screen h-screen bg-slate-900">
-      <ApiKeyForm onSave={handleApiKeySave} />
+      <div className="absolute top-4 right-4 z-10">
+        <ApiKeyForm onSave={handleApiKeySave} />
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}

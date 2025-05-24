@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 interface ApiKeyFormProps {
   onSave: (figmaToken: string, geminiKey: string) => void;
@@ -16,14 +16,14 @@ export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
   };
 
   return (
-    <div className="absolute top-4 left-4 z-10">
+    <div>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-80 text-center"
       >
         {isExpanded ? 'Hide API Keys' : 'Configure API Keys'}
       </button>
-
+      
       {isExpanded && (
         <form onSubmit={handleSubmit} className="mt-2 p-4 bg-white rounded shadow-lg w-80">
           <div className="space-y-4">
@@ -39,7 +39,7 @@ export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
                 placeholder="Enter Figma access token"
               />
             </div>
-
+            
             <div>
               <label className="text-sm font-medium block text-gray-700">
                 Gemini API Key
