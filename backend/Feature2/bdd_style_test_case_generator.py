@@ -15,8 +15,9 @@ class response_scheme(BaseModel):
     bdd_style_descriptions : list[response_scheme_base]
 
 #input test plan in json format and call gemini api to generate bdd style test case    
-def generate_test_case(test_plan: dict,api_key:str) -> list:
-    output=[]
+def generate_test_case(test_plan: dict,api_key:str) -> dict:
+    output = {}
+    case = 1
     for t in test_plan['test_plan'] :
         client = genai.Client(api_key=api_key)
         response = client.models.generate_content(
@@ -30,7 +31,9 @@ def generate_test_case(test_plan: dict,api_key:str) -> list:
                 "response_schema": response_scheme             
             }
         )
-        output.append(json.loads(response.text))
+        print("Objective ", case, " complete.")
+        output["Objective_" + str(case)] = json.loads(response.text)
+        case += 1
     return output
 
 if __name__ == "__main__":
