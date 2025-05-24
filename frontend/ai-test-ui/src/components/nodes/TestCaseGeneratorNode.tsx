@@ -2,71 +2,69 @@ import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import type { NodeProps } from 'reactflow';
 
-interface TestPlanGeneratorNodeData {
-  isFeatureReady: boolean;
-  onTestPlanReady: (ready: boolean) => void;
+interface TestCaseGeneratorNodeData {
+  isTestPlanReady: boolean;
 }
 
-interface TestItem {
-  Types_of_Testing: string;
-  Test_Approach: string;
-  Acceptance_Criteria_for_each_item: string[];
+interface BDDDescription {
+  Scenario: string;
+  Given: string;
+  And: string;
+  When: string;
+  Then: string;
 }
 
-interface TestCase {
-  Objective: string;
-  Scope: string;
-  Test_Items: TestItem;
+interface Objective {
+  feature: string;
+  bdd_style_descriptions: BDDDescription[];
 }
 
-interface TestPlan {
-  test_plan: TestCase[];
+interface TestCases {
+  [key: string]: Objective;
 }
 
-export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGeneratorNodeData>) {
+export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGeneratorNodeData>) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isGenerated, setIsGenerated] = useState(false);
-  const [testPlan, setTestPlan] = useState<TestPlan | null>(null);
+  const [testCases, setTestCases] = useState<TestCases | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
   const handleGenerate = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const featureRes = await fetch('http://localhost:8000/data/feature', {
+      const planRes = await fetch('http://localhost:8000/data/plan', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!featureRes.ok) {
-        throw new Error('Failed to fetch Figma data from server');
+      if (!planRes.ok) {
+        throw new Error('Failed to fetch test plan from server');
       }
 
-      const featureData = await featureRes.json();
+      const planData = await planRes.json();
 
-      const response = await fetch('http://localhost:8000/generate-test-plan', {
+      const response = await fetch('http://localhost:8000/generate-test-cases', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            feature_list: featureData
-          }),
+          test_plan: planData
+        }),
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const planData = await response.json();
-      setTestPlan(planData);
+      const data = await response.json();
+      setTestCases(data);
       setIsGenerated(true);
-      data.onTestPlanReady(true);
     } catch (err) {
-      console.error('Error generating test plan:', err);
-      setError(err instanceof Error ? err.message : 'Failed to generate test plan');
-      data.onTestPlanReady(false);
+      console.error('Error generating test cases:', err);
+      setError(err instanceof Error ? err.message : 'Failed to generate test cases');
     } finally {
       setIsLoading(false);
     }
@@ -74,49 +72,49 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
 
   const handleDownload = async () => {
     try {
-      const res = await fetch('http://localhost:8000/data/plan', {
+      const res = await fetch('http://localhost:8000/data/cases', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
       if (!res.ok) {
-        throw new Error('Failed to download test plan');
+        throw new Error('Failed to download test cases');
       }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'test-plan.json';
+      a.download = 'test-cases.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to download test plan');
+      setError(err instanceof Error ? err.message : 'Failed to download test cases');
     }
   };
 
   return (
     <div className="p-4 bg-white border rounded shadow w-96 space-y-3">
-      <div className="text-lg font-semibold text-gray-800 mb-2">🤖 LLM Test Plan Generator</div>
+      <div className="text-lg font-semibold text-gray-800 mb-2">📄 Gherkin Test Case Generator</div>
       <div className="flex flex-col">
         <div className="flex items-center">
           <div className="ml-2">
-            <div className="text-gray-500">Generates test plans using LLM</div>
+            <div className="text-gray-500">Generates Gherkin-style test cases</div>
           </div>
         </div>
         <button
           onClick={handleGenerate}
-          disabled={isLoading || !data.isFeatureReady}
+          disabled={isLoading || !data.isTestPlanReady}
           className={`mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-          {isLoading ? 'Generating...' : 'Generate Test Plan'}
+          {isLoading ? 'Generating...' : 'Generate Test Cases'}
         </button>
-        {!data.isFeatureReady && (
+        {!data.isTestPlanReady && (
           <div className="mt-2 text-gray-500 text-sm">
-            Waiting for feature representation...
+            Waiting for test plan...
           </div>
         )}
         {error && (
@@ -128,7 +126,7 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
           <div className="flex items-center gap-2 mt-2">
             <div className="flex-1">
               <p className="text-sm text-green-600">
-                ✓ Test plan generated successfully
+                ✓ Test cases generated successfully
               </p>
             </div>
             <div className="flex gap-2">
@@ -150,27 +148,25 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
             </div>
           </div>
         )}
-        {showPreview && testPlan && (
+        {showPreview && testCases && (
           <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
-            {testPlan.test_plan.map((testCase, index) => (
-              <div key={index} className="border rounded p-3 bg-gray-50">
-                <h3 className="font-semibold text-blue-700">Objective {index + 1}</h3>
-                <p className="text-sm mt-1">{testCase.Objective}</p>
+            {Object.entries(testCases).map(([objectiveKey, objective]) => (
+              <div key={objectiveKey} className="border rounded p-3 bg-gray-50">
+                <h3 className="font-semibold text-blue-700">{objectiveKey}</h3>
+                <p className="text-sm mt-1 font-medium">{objective.feature}</p>
                 
-                <h4 className="font-medium text-gray-700 mt-2">Scope</h4>
-                <p className="text-sm mt-1">{testCase.Scope}</p>
-                
-                <h4 className="font-medium text-gray-700 mt-2">Test Items</h4>
-                <div className="text-sm mt-1">
-                  <p><span className="font-medium">Types of Testing:</span> {testCase.Test_Items.Types_of_Testing}</p>
-                  <p className="mt-1"><span className="font-medium">Test Approach:</span> {testCase.Test_Items.Test_Approach}</p>
-                  
-                  <h5 className="font-medium text-gray-700 mt-2">Acceptance Criteria:</h5>
-                  <ul className="list-disc list-inside mt-1 space-y-1">
-                    {testCase.Test_Items.Acceptance_Criteria_for_each_item.map((criteria, idx) => (
-                      <li key={idx} className="text-sm">{criteria}</li>
-                    ))}
-                  </ul>
+                <div className="mt-3 space-y-4">
+                  {objective.bdd_style_descriptions.map((description, index) => (
+                    <div key={index} className="border-t pt-3">
+                      <h4 className="font-medium text-gray-700 mb-2">{description.Scenario}</h4>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="font-medium text-green-700">Given:</span> {description.Given}</p>
+                        <p><span className="font-medium text-green-700">And:</span> {description.And}</p>
+                        <p><span className="font-medium text-blue-700">When:</span> {description.When}</p>
+                        <p><span className="font-medium text-purple-700">Then:</span> {description.Then}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}

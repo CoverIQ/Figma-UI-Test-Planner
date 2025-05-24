@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -14,11 +14,13 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import FeatureInputNode from './components/nodes/FeatureInputNode';
 import TestPlanGeneratorNode from './components/nodes/TestPlanGeneratorNode';
+import TestCaseGeneratorNode from './components/nodes/TestCaseGeneratorNode';
 import ApiKeyForm from './components/ApiKeyForm';
 
 const nodeTypes = {
   featureInput: FeatureInputNode,
   testPlanGenerator: TestPlanGeneratorNode,
+  testCaseGenerator: TestCaseGeneratorNode,
 };
 
 const initialEdges: Edge[] = [
@@ -67,14 +69,23 @@ const staticNodes: Node[] = [
     targetPosition: Position.Left, 
     sourcePosition: Position.Right 
   },
-  { id: '5', data: { label: '📄 Gherkin Test Case Generator' }, position: { x: 1000, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
-  { id: '6', data: { label: '🧪 Start Testing!' }, position: { x: 1400, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
+  { 
+    id: '5', 
+    type: 'testCaseGenerator',
+    data: {},
+    position: { x: 1050, y: 100 }, 
+    draggable: false, 
+    targetPosition: Position.Left, 
+    sourcePosition: Position.Right 
+  },
+  { id: '6', data: { label: '🧪 Start Testing!' }, position: { x: 1550, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
 ];
 
 export default function App() {
   const [featureDesc, setFeatureDesc] = useState('');
   const [figmaUrl, setFigmaUrl] = useState('');
   const [isFeatureReady, setIsFeatureReady] = useState(false);
+  const [isTestPlanReady, setIsTestPlanReady] = useState(false);
 
   const handleApiKeySave = async (figmaToken: string, geminiKey: string) => {
     try {
@@ -114,9 +125,8 @@ export default function App() {
     {
       id: '1',
       type: 'featureInput',
-      position: { x: 0, y: 100 },
+      position: { x: -50, y: 100 },
       draggable: false,
-      sourcePosition: Position.Top,
       data: {
         figmaUrl,
         featureDesc,
@@ -140,7 +150,7 @@ export default function App() {
   ];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
     setNodes(nodes => nodes.map(node => {
@@ -157,28 +167,73 @@ export default function App() {
     }));
   }, [isFeatureReady, setNodes]);
 
+  useEffect(() => {
+    setNodes(nodes => nodes.map(node => {
+      if (node.id === '5') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isTestPlanReady,
+          },
+        };
+      }
+      return node;
+    }));
+  }, [isTestPlanReady, setNodes]);
+
+  useEffect(() => {
+    setNodes(nodes => nodes.map(node => {
+      if (node.id === '1') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            onFeatureReady: setIsFeatureReady,
+          },
+        };
+      }
+      return node;
+    }));
+  }, [setNodes]);
+
+  useEffect(() => {
+    setNodes(nodes => nodes.map(node => {
+      if (node.id === '4') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            onTestPlanReady: setIsTestPlanReady,
+          },
+        };
+      }
+      return node;
+    }));
+  }, [setNodes]);
+
   return (
     <div className="w-screen h-screen bg-slate-900">
       <ApiKeyForm onSave={handleApiKeySave} />
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          fitView
-          nodeTypes={nodeTypes}
-          nodesDraggable={false}
-          nodesConnectable={false}
-          panOnScroll
-          panOnDrag={false}
-          zoomOnDoubleClick
-          zoomOnScroll={false}
-          zoomOnPinch
-        >
-          <MiniMap />
-          <Controls />
-          <Background />
-        </ReactFlow>
-      </div>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        fitView
+        nodeTypes={nodeTypes}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        panOnScroll
+        panOnDrag={false}
+        zoomOnDoubleClick
+        zoomOnScroll={false}
+        zoomOnPinch
+      >
+        <MiniMap />
+        <Controls />
+        <Background />
+      </ReactFlow>
+    </div>
   );
 }
