@@ -32,6 +32,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
   const [localFeatureDesc, setLocalFeatureDesc] = useState(data.featureDesc);
   const [error, setError] = useState<string | null>(null);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [isGenerated, setIsGenerated] = useState(false);
 
   const validateFigmaUrl = (url: string): boolean => {
     const figmaUrlPattern = /^https:\/\/www\.figma\.com\/(file|design)\/[a-zA-Z0-9]+/;
@@ -89,18 +90,58 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!extractedData) return;
 
-    const blob = new Blob([JSON.stringify(extractedData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `figma-data-${extractedData.file_key}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const res = await fetch('http://localhost:8000/data/figma', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to download Figma data');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `figma-data-${extractedData.file_key}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to download Figma data');
+    }
+  };
+
+  const handleDownloadFeature = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/data/feature', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to download feature data');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `feature-data-${extractedData?.file_key || 'generated'}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setGenerationError(err instanceof Error ? err.message : 'Failed to download feature data');
+    }
   };
 
   const handleGenerate = async () => {
@@ -123,7 +164,8 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
         throw new Error(errorData.detail || 'Failed to generate feature representation');
       }
 
-      const result = await res.json();
+      await res.json();
+      setIsGenerated(true);
       data.onSubmit();
     } catch (err) {
       console.error('Generation error:', err);
@@ -135,6 +177,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
 
   return (
     <div className="p-4 bg-white border rounded shadow w-96 space-y-3">
+      <div className="text-lg font-semibold text-gray-800 mb-2">🔍 Feature Data Extractor</div>
       <div>
         <label className="text-sm font-medium block">🎨 Figma Frame URL</label>
         <div className="flex gap-2">
@@ -166,9 +209,6 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
             <p className="text-sm text-green-600">
               ✓ Data extracted successfully
             </p>
-            <p className="text-xs text-gray-500">
-              File: {extractedData.figma_data.name}
-            </p>
           </div>
           <button
             onClick={handleDownload}
@@ -177,7 +217,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            Download
+            Download to View
           </button>
         </div>
       )}
@@ -203,6 +243,25 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
       >
         {isGenerating ? 'Generating Feature Representation...' : extractedData ? 'Generate Feature Representation' : 'Extract Figma Data First'}
       </button>
+
+      {isGenerated && (
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <p className="text-sm text-green-600">
+              ✓ Feature representation generated successfully
+            </p>
+          </div>
+          <button
+            onClick={handleDownloadFeature}
+            className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded flex items-center gap-1"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download to View
+          </button>
+        </div>
+      )}
 
       <Handle type="source" position={Position.Right} />
     </div>

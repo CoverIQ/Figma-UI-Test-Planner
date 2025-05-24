@@ -8,6 +8,7 @@ import ReactFlow, {
   Position,
   type Edge,
   type Node,
+  MarkerType,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -19,15 +20,42 @@ const nodeTypes = {
 };
 
 const initialEdges: Edge[] = [
-  { id: 'e1-3', source: '1', target: '3' },
-  { id: 'e2-3', source: '2', target: '3' },
-  { id: 'e3-4', source: '3', target: '4' },
-  { id: 'e4-5', source: '4', target: '5' },
-  { id: 'e5-6', source: '5', target: '6' },
+  { 
+    id: 'e1-4', 
+    source: '1', 
+    target: '4',
+    style: { strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+    },
+  },
+  { 
+    id: 'e4-5', 
+    source: '4', 
+    target: '5',
+    style: { strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+    },
+  },
+  { 
+    id: 'e5-6', 
+    source: '5', 
+    target: '6',
+    style: { strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+    },
+  },
 ];
 
 const staticNodes: Node[] = [
-  { id: '3', data: { label: '🔍 Feature Data Extractor' }, position: { x: 400, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
   { id: '4', data: { label: '🤖 LLM Test Plan Generator' }, position: { x: 650, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
   { id: '5', data: { label: '📄 Markdown Test Plan Output' }, position: { x: 900, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
   { id: '6', data: { label: '🧪 Gherkin Test Case Generator' }, position: { x: 1150, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
@@ -66,9 +94,9 @@ export default function App() {
       const data = await res.json();
       console.log('API keys saved successfully:', data);
       alert('API keys saved successfully!');
-    } catch (err) {
-      console.error('API error:', err);
-      alert(`Failed to save API keys: ${err.message}`);
+    } catch (error) {
+      console.error('API error:', error);
+      alert(`Failed to save API keys: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -88,8 +116,8 @@ export default function App() {
       const data = await res.json();
       console.log('Parsed data:', data);
       setParsedData(data);
-    } catch (err) {
-      console.error('API error:', err);
+    } catch (error) {
+      console.error('API error:', error);
       alert('Failed to fetch test plan. Check your inputs or server.');
     }
   };
@@ -123,18 +151,18 @@ export default function App() {
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-        fitView
+          fitView
           nodeTypes={nodeTypes}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        panOnScroll
-        panOnDrag={false}
-        zoomOnDoubleClick
-        zoomOnScroll={false}
-        zoomOnPinch
-      >
-        <MiniMap />
-        <Controls />
+          nodesDraggable={false}
+          nodesConnectable={false}
+          panOnScroll
+          panOnDrag={false}
+          zoomOnDoubleClick
+          zoomOnScroll={false}
+          zoomOnPinch
+        >
+          <MiniMap />
+          <Controls />
           <Background />
         </ReactFlow>
       </div>
