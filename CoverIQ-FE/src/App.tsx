@@ -96,24 +96,24 @@ function Landing() {
     <Layout showLogoOnly>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900">
         <div className="text-center mb-12">
-          <h1 className="text-7xl font-bold tracking-tight mb-4">
+          <h1 className="text-7xl font-bold tracking-tight mb-6">
             <span className="text-blue-500">Cover</span>
             <span className="text-emerald-500">IQ</span>
           </h1>
-          <p className="text-xl text-white mb-8">Covering Intelligent Quality Assurance</p>
+          <p className="text-xl text-white mb-2">Automated Tools and Solutions that Cover Intelligent Quality Assurance </p>
         </div>
         <div className="flex space-x-6">
           <a
             href="/introduction"
             className="px-8 py-3 text-lg font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
           >
-            Learn More
+            Learn More About CoverIQ
           </a>
           <a
-            href="/CoverIQ/Designer"
+            href="/products/Planner"
             className="px-8 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Get Started
+            Try the CoverIQ Test Planner
           </a>
         </div>
       </div>
@@ -312,14 +312,14 @@ function Introduction() {
           <h2 className="text-2xl font-semibold mt-10 mb-4 text-blue-500">Our Products</h2>
 
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Unit</h3>
+            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Unit Test Support</h3>
             <p className="text-lg text-white text-justify">
               An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by LLM-based root cause analysis.
             </p>
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Designer</h3>
+            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Test Planner</h3>
             <p className="text-lg text-white text-justify">
               This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
             </p>
@@ -396,7 +396,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/CoverIQ/Designer" element={<TestAssistant />} />
+        <Route path="/products/Planner" element={<TestAssistant />} />
         <Route path="/introduction" element={<Introduction />} />
         <Route path="/team" element={<Team />} />
       </Routes>

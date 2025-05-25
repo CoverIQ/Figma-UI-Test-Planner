@@ -6,7 +6,7 @@ export default function LogoDropdown() {
   const menuItems = [
     { label: 'About CoverIQ', path: '/introduction' },
     { label: 'Meet the Team', path: '/team' },
-    { label: 'CoverIQ Designer', path: '/CoverIQ/Designer' },
+    { label: 'CoverIQ Test Planner', path: '/products/Planner' },
     { label: 'GitHub', path: 'https://github.com/CoverIQ', external: true },
   ];
 
