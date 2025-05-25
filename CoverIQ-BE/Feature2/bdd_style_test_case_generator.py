@@ -32,7 +32,7 @@ def generate_test_case(test_plan: dict,api_key:str) -> dict:
             }
         )
         # print("Objective ", case, " complete.")
-        output["Objective_" + str(case)] = json.loads(response.text)
+        output["Feature " + str(case)] = json.loads(response.text)
         case += 1
     return output
 

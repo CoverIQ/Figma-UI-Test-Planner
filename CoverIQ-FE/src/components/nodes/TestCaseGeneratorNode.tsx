@@ -149,21 +149,21 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
           </div>
         )}
         {showPreview && testCases && (
-          <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
+          <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text bg-gray-900 text-gray-100 rounded-lg p-4  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
             {Object.entries(testCases).map(([objectiveKey, objective]) => (
-              <div key={objectiveKey} className="border rounded p-3 bg-gray-50">
-                <h3 className="font-semibold text-blue-700">{objectiveKey}</h3>
-                <p className="text-sm mt-1 font-medium">{objective.feature}</p>
+              <div key={objectiveKey} className="border border-gray-700 rounded p-3 bg-gray-800">
+                <h3 className="font-bold text-orange-400">{objectiveKey}: </h3>
+                <p className="mt-1 text-gray-300">{objective.feature}</p>
                 
                 <div className="mt-3 space-y-4">
                   {objective.bdd_style_descriptions.map((description, index) => (
-                    <div key={index} className="border-t pt-3">
-                      <h4 className="font-medium text-gray-700 mb-2">{description.Scenario}</h4>
-                      <div className="space-y-2 text-sm">
-                        <p><span className="font-medium text-green-700">Given:</span> {description.Given}</p>
-                        <p><span className="font-medium text-green-700">And:</span> {description.And}</p>
-                        <p><span className="font-medium text-blue-700">When:</span> {description.When}</p>
-                        <p><span className="font-medium text-purple-700">Then:</span> {description.Then}</p>
+                    <div key={index} className="border-t border-gray-700 pt-3">
+                      <div className="border-t border-gray-700 pb-2"><span className="font-medium text-orange-400 mb-2">Scenario: </span><span className="text-gray-200">{description.Scenario}</span></div>
+                      <div className="space-y-2">
+                        <p><span className="font-medium text-green-400">Given:</span> <span className="text-gray-200">{description.Given}</span></p>
+                        <p><span className="font-medium text-green-400">And:</span> <span className="text-gray-200">{description.And}</span></p>
+                        <p><span className="font-medium text-blue-400">When:</span> <span className="text-gray-200">{description.When}</span></p>
+                        <p><span className="font-medium text-purple-400">Then:</span> <span className="text-gray-200">{description.Then}</span></p>
                       </div>
                     </div>
                   ))}

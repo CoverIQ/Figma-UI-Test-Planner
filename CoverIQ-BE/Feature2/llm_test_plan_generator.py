@@ -6,7 +6,7 @@ from google import genai
 class response_scheme_base1(BaseModel) :
     Types_of_Testing : str 
     Test_Approach : str
-    Acceptance_Criteria_for_each_item : list[str]
+    Acceptance_Criteria : list[str]
 
 class response_scheme2(BaseModel) :
     Objective : str 

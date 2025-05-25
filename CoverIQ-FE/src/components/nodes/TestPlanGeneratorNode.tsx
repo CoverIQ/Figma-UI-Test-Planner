@@ -10,7 +10,7 @@ interface TestPlanGeneratorNodeData {
 interface TestItem {
   Types_of_Testing: string;
   Test_Approach: string;
-  Acceptance_Criteria_for_each_item: string[];
+  Acceptance_Criteria: string[];
 }
 
 interface TestCase {
@@ -151,23 +151,23 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
           </div>
         )}
         {showPreview && testPlan && (
-          <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-500">
+          <div className="mt-4 space-y-4 max-h-[400px] overflow-y-auto pr-2 select-text bg-gray-900 text-gray-100 rounded-lg p-4  [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-700 [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
             {testPlan.test_plan.map((testCase, index) => (
-              <div key={index} className="border rounded p-3 bg-gray-50">
-                <h3 className="font-semibold text-blue-700">Objective {index + 1}</h3>
-                <p className="text-sm mt-1">{testCase.Objective}</p>
+              <div key={index} className="border border-gray-700 rounded p-3 bg-gray-800">
+                <h3 className="font-semibold text-blue-400">Objective {index + 1}</h3>
+                <p className="text-sm mt-1 text-gray-200">{testCase.Objective}</p>
                 
-                <h4 className="font-medium text-gray-700 mt-2">Scope</h4>
-                <p className="text-sm mt-1">{testCase.Scope}</p>
+                <h4 className="font-medium text-gray-300 mt-2">Scope</h4>
+                <p className="text-sm mt-1 text-gray-200">{testCase.Scope}</p>
                 
-                <h4 className="font-medium text-gray-700 mt-2">Test Items</h4>
+                <h4 className="font-medium text-gray-300 mt-2">Test Items</h4>
                 <div className="text-sm mt-1">
-                  <p><span className="font-medium">Types of Testing:</span> {testCase.Test_Items.Types_of_Testing}</p>
-                  <p className="mt-1"><span className="font-medium">Test Approach:</span> {testCase.Test_Items.Test_Approach}</p>
+                  <p><span className="font-medium text-gray-300">Types of Testing:</span> <span className="text-gray-200">{testCase.Test_Items.Types_of_Testing}</span></p>
+                  <p className="mt-1"><span className="font-medium text-gray-300">Test Approach:</span> <span className="text-gray-200">{testCase.Test_Items.Test_Approach}</span></p>
                   
-                  <h5 className="font-medium text-gray-700 mt-2">Acceptance Criteria:</h5>
-                  <ul className="list-disc list-inside mt-1 space-y-1">
-                    {testCase.Test_Items.Acceptance_Criteria_for_each_item.map((criteria, idx) => (
+                  <h5 className="font-medium text-gray-300 mt-2">Acceptance Criteria:</h5>
+                  <ul className="list-disc list-inside mt-1 space-y-1 text-gray-200">
+                    {testCase.Test_Items.Acceptance_Criteria.map((criteria, idx) => (
                       <li key={idx} className="text-sm">{criteria}</li>
                     ))}
                   </ul>
