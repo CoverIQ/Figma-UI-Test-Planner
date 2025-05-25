@@ -4,6 +4,7 @@ import type { NodeProps } from 'reactflow';
 
 interface TestCaseGeneratorNodeData {
   isTestPlanReady: boolean;
+  onTestCasesGenerated?: (generated: boolean) => void;
 }
 
 interface BDDDescription {
@@ -59,12 +60,14 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      setTestCases(data);
+      const responseData = await response.json();
+      setTestCases(responseData);
       setIsGenerated(true);
+      data.onTestCasesGenerated?.(true);
     } catch (err) {
       console.error('Error generating test cases:', err);
       setError(err instanceof Error ? err.message : 'Failed to generate test cases');
+      data.onTestCasesGenerated?.(false);
     } finally {
       setIsLoading(false);
     }
@@ -93,6 +96,32 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
     } catch (err) {
       console.error('Download error:', err);
       setError(err instanceof Error ? err.message : 'Failed to download test cases');
+    }
+  };
+
+  const handleDownloadMarkdown = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/data/cases/markdown', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download test cases markdown');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'test-cases.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to download test cases markdown');
     }
   };
 
@@ -143,7 +172,16 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Download
+                JSON
+              </button>
+              <button
+                onClick={handleDownloadMarkdown}
+                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                MD
               </button>
             </div>
           </div>

@@ -16,12 +16,14 @@ import 'reactflow/dist/style.css';
 import FeatureInputNode from './components/nodes/FeatureInputNode';
 import TestPlanGeneratorNode from './components/nodes/TestPlanGeneratorNode';
 import TestCaseGeneratorNode from './components/nodes/TestCaseGeneratorNode';
+import StartTestingNode from './components/nodes/StartTestingNode';
 import Layout from './components/Layout';
 
 const nodeTypes = {
   featureInput: FeatureInputNode,
   testPlanGenerator: TestPlanGeneratorNode,
   testCaseGenerator: TestCaseGeneratorNode,
+  startTesting: StartTestingNode,
 };
 
 const initialEdges: Edge[] = [
@@ -79,7 +81,14 @@ const staticNodes: Node[] = [
     targetPosition: Position.Left, 
     sourcePosition: Position.Right 
   },
-  { id: '6', data: { label: '🧪 Start Testing!' }, position: { x: 1550, y: 100 }, draggable: false, targetPosition: Position.Left, sourcePosition: Position.Right },
+  { 
+    id: '6', 
+    type: 'startTesting',
+    data: { isTestCasesReady: false },
+    position: { x: 1550, y: 100 }, 
+    draggable: false, 
+    targetPosition: Position.Left
+  },
 ];
 
 function Landing() {
@@ -117,6 +126,7 @@ function TestAssistant() {
   const [figmaUrl, setFigmaUrl] = useState('');
   const [isFeatureReady, setIsFeatureReady] = useState(false);
   const [isTestPlanReady, setIsTestPlanReady] = useState(false);
+  const [isGenerated, setIsGenerated] = useState(false);
 
   const handleApiKeySave = async (figmaToken: string, geminiKey: string) => {
     try {
@@ -206,6 +216,7 @@ function TestAssistant() {
           data: {
             ...node.data,
             isTestPlanReady,
+            onTestCasesGenerated: setIsGenerated,
           },
         };
       }
@@ -242,6 +253,21 @@ function TestAssistant() {
       return node;
     }));
   }, [setNodes]);
+
+  useEffect(() => {
+    setNodes(nodes => nodes.map(node => {
+      if (node.id === '6') {
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isTestCasesReady: isGenerated,
+          },
+        };
+      }
+      return node;
+    }));
+  }, [isGenerated, setNodes]);
 
   return (
     <Layout showApiKeyForm onApiKeySave={handleApiKeySave}>

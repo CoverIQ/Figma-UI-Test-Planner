@@ -98,6 +98,32 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
     }
   };
 
+  const handleDownloadMarkdown = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/data/plan/markdown', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to download test plan markdown');
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'test-plan.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to download test plan markdown');
+    }
+  };
+
   return (
     <div className="p-4 bg-white border rounded shadow w-96 space-y-3">
       <div className="text-lg font-semibold text-gray-800 mb-2">🤖 LLM Test Plan Generator</div>
@@ -145,7 +171,16 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                Download
+                JSON
+              </button>
+              <button
+                onClick={handleDownloadMarkdown}
+                className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded flex items-center gap-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                MD
               </button>
             </div>
           </div>
