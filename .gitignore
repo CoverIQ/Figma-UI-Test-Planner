@@ -160,7 +160,7 @@ report.md
 .env.*
 
 # Test data and generated files
-backend/data/*
-!backend/data/.gitkeep
-backend/Feature2/test_plan_example.txt
-backend/Feature2/test_case_example.txt
+CoverIQ-BE/data/*
+!CoverIQ-BE/data/.gitkeep
+CoverIQ-BE/Feature2/test_plan_example.txt
+CoverIQ-BE/Feature2/test_case_example.txt

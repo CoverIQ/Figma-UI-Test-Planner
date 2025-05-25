@@ -20,7 +20,7 @@ A tool that automatically generates test plans and test cases from Figma designs
 
 ## Environment Setup
 
-1. Create a `.env` file in the `backend` directory with the following variables:
+1. Create a `.env` file in the `CoverIQ-BE` directory with the following variables:
 ```env
 GEMINI_API_KEY=your_gemini_api_key
 FIGMA_ACCESS_TOKEN=your_figma_access_token
@@ -32,7 +32,7 @@ FIGMA_ACCESS_TOKEN=your_figma_access_token
 
 1. Navigate to the backend directory:
 ```bash
-cd backend
+cd CoverIQ-BE
 ```
 
 2. Create a virtual environment (optional but recommended):
@@ -57,7 +57,7 @@ The backend server will run on `http://localhost:8000`
 
 1. Navigate to the frontend directory:
 ```bash
-cd frontend/ai-test-ui
+cd CoverIQ-FE
 ```
 
 2. Install dependencies:
@@ -87,7 +87,7 @@ The frontend will be available at `http://localhost:5173`
 
 ```
 CoverIQ-Test-Assistant/
-├── backend/
+├── CoverIQ-BE/
 │   ├── app/
 │   │   ├── routes.py
 │   │   └── services.py
@@ -98,15 +98,14 @@ CoverIQ-Test-Assistant/
 │   │   └── llm_test_plan_generator.py
 │   ├── main.py
 │   └── requirements.txt
-└── frontend/
-    └── ai-test-ui/
-        ├── src/
-        │   ├── components/
-        │   │   └── nodes/
-        │   │       ├── FeatureInputNode.tsx
-        │   │       └── TestPlanNode.tsx
-        │   └── App.tsx
-        └── package.json
+└── CoverIQ-FE/
+    ├── src/
+    │   ├── components/
+    │   │   └── nodes/
+    │   │       ├── FeatureInputNode.tsx
+    │   │       └── TestPlanNode.tsx
+    │   └── App.tsx
+    └── package.json
 ```
 
 ## API Endpoints

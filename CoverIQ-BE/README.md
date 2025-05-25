@@ -15,7 +15,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file in the backend directory with your API keys:
+3. Create a `.env` file in the CoverIQ-BE directory with your API keys:
 ```
 FIGMA_ACCESS_TOKEN=your_figma_token_here
 GEMINI_API_KEY=your_gemini_api_key_here
@@ -151,7 +151,7 @@ Once the server is running, you can access the interactive API documentation at:
 ## Project Structure
 
 ```
-backend/
+CoverIQ-BE/
 ├── app/
 │   ├── routes.py      # API endpoints
 │   └── services.py    # Business logic
