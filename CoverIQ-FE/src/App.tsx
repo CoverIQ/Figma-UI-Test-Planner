@@ -67,7 +67,7 @@ const staticNodes: Node[] = [
     id: '4', 
     type: 'testPlanGenerator',
     data: {},
-    position: { x: 500, y: 100 }, 
+    position: { x: 500, y: 0 }, 
     draggable: false, 
     targetPosition: Position.Left, 
     sourcePosition: Position.Right 
@@ -76,7 +76,7 @@ const staticNodes: Node[] = [
     id: '5', 
     type: 'testCaseGenerator',
     data: {},
-    position: { x: 1050, y: 100 }, 
+    position: { x: 1050, y: 0 }, 
     draggable: false, 
     targetPosition: Position.Left, 
     sourcePosition: Position.Right 
@@ -85,7 +85,7 @@ const staticNodes: Node[] = [
     id: '6', 
     type: 'startTesting',
     data: { isTestCasesReady: false },
-    position: { x: 1550, y: 100 }, 
+    position: { x: 1550, y: 0 }, 
     draggable: false, 
     targetPosition: Position.Left
   },
@@ -166,7 +166,7 @@ function TestAssistant() {
     {
       id: '1',
       type: 'featureInput',
-      position: { x: -50, y: 100 },
+      position: { x: -50, y: 0 },
       draggable: false,
       data: {
         figmaUrl,
@@ -271,7 +271,7 @@ function TestAssistant() {
 
   return (
     <Layout showApiKeyForm onApiKeySave={handleApiKeySave}>
-      <div className="w-screen h-screen">
+      <div className="w-screen h-screen relative">
         <ReactFlow
           nodes={nodes}
           edges={initialEdges}
@@ -286,11 +286,39 @@ function TestAssistant() {
           zoomOnDoubleClick
           zoomOnScroll={false}
           zoomOnPinch
+          proOptions={{ hideAttribution: true }}
         >
-          <MiniMap />
-          <Controls />
+          <MiniMap 
+            style={{
+              position: 'absolute',
+              bottom: '6rem',
+              right: '0rem',
+              backgroundColor: 'rgba(17, 24, 39, 0.8)',
+              borderRadius: '0.5rem',
+            }}
+          />
+          <Controls 
+            showInteractive={false}
+            showZoom={false}
+            showFitView={true}
+            position='bottom-right'
+            style={{
+              position: 'absolute',
+              bottom: '16rem',
+              right: '0rem',
+            }}
+          />
           <Background />
         </ReactFlow>
+        <div className="absolute bottom-4 right-4">
+          <div className="flex items-center space-x-3">
+            <span className="text-7xl font-bold tracking-tight">
+              <span className="text-gray-500 hover:text-blue-500">Cover</span>
+              <span className="text-gray-500 hover:text-emerald-500">IQ </span>
+              <span className="text-gray-500 hover:text-gray-300">Test Planner</span>
+            </span>
+          </div>
+        </div>
       </div>
     </Layout>
   );
@@ -312,16 +340,16 @@ function Introduction() {
           <h2 className="text-2xl font-semibold mt-10 mb-4 text-blue-500">Our Products</h2>
 
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Unit Test Support</h3>
+            <a href='/products/Planner' className="text-xl font-semibold mb-2 text-emerald-500 hover:text-emerald-300">CoverIQ Test Planner</a>
             <p className="text-lg text-white text-justify">
-              An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by LLM-based root cause analysis.
+              This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
             </p>
           </div>
 
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Test Planner</h3>
+            <a className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Unit Test Support</a>
             <p className="text-lg text-white text-justify">
-              This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
+              An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by LLM-based root cause analysis.
             </p>
           </div>
 
@@ -353,7 +381,7 @@ function Team() {
           <div className="mb-8">
             <h3 className="text-xl font-semibold mb-2 text-blue-500">James Tu, Co-Founder & Lead Engineer</h3>
             <p className="text-lg text-white text-justify">
-              Graduated from National Cheng Kung University with a degree in Computer Science and Information Engineering. James leads core engineering and architecture at CoverIQ.
+              Graduated from National Cheng Kung University with a degree in Computer Science and Information Engineering. James leads core engineering and product design at CoverIQ.
             </p>
           </div>
 
@@ -382,6 +410,13 @@ function Team() {
             <h3 className="text-xl font-semibold mb-2 text-blue-500">Wilson Liang, Feature Developer</h3>
             <p className="text-lg text-white text-justify">
               MSCS student at Columbia University. Wilson contributes to feature development and rapid product iteration.
+            </p>
+          </div>
+
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-2 text-blue-500">Liam Lin, Feature Developer</h3>
+            <p className="text-lg text-white text-justify">
+            Currently studying Mechanical Engineering at National Yang Ming Chiao Tung University. Liam provides technical support to CoverIQ product feature development.
             </p>
           </div>
 

@@ -16,7 +16,7 @@ export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
   };
 
   return (
-    <div>
+    <div className='text-right'>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-80 text-center"

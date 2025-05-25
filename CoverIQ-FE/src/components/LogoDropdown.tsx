@@ -18,8 +18,8 @@ export default function LogoDropdown() {
       >
         <div className="flex items-center space-x-3">
           <span className="text-5xl font-bold tracking-tight">
-            <span className="text-blue-500 hover:text-blue-400">Cover</span>
-            <span className="text-emerald-500 hover:text-emerald-400">IQ</span>
+            <span className="text-blue-500">Cover</span>
+            <span className="text-emerald-500">IQ</span>
           </span>
           <svg
             className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''} text-white`}
