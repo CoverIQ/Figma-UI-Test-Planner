@@ -9,11 +9,13 @@ A tool that automatically generates test plans and test cases from Figma designs
 - Interactive flow-based UI
 - Real-time test plan generation
 - Support for both Figma URL and feature description inputs
+- Export test plans and test cases in Markdown format
+- Export test cases in .feature file format
 
 ## Prerequisites
 
-- Python 3.8 or higher
-- Node.js 16 or higher
+- Python 3.9 or higher
+- Node.js 18 or higher
 - npm or yarn
 - Figma Access Token
 - Google Gemini API Key
@@ -82,6 +84,10 @@ The frontend will be available at `http://localhost:5173`
 3. The Test Plan node will display:
    - Generated test plan
    - BDD-style test cases
+4. Download options:
+   - Test plan in Markdown format
+   - Test cases in Markdown format
+   - Test cases in .feature file format
 
 ## Project Structure
 
@@ -89,28 +95,29 @@ The frontend will be available at `http://localhost:5173`
 CoverIQ-Test-Assistant/
 ├── CoverIQ-BE/
 │   ├── app/
-│   │   ├── routes.py
-│   │   └── services.py
+│   │   ├── routes.py      # API endpoint definitions
+│   │   └── services.py    # Business logic and AI integration
 │   ├── Feature2/
 │   │   ├── bdd_style_test_case_generator.py
 │   │   ├── feature_representation.py
 │   │   ├── figma_frame_parser.py
 │   │   └── llm_test_plan_generator.py
-│   ├── main.py
-│   └── requirements.txt
+│   ├── data/             # Data storage
+│   ├── main.py           # FastAPI application
+│   └── requirements.txt  # Dependencies
 └── CoverIQ-FE/
     ├── src/
     │   ├── components/
-    │   │   └── nodes/
-    │   │       ├── FeatureInputNode.tsx
-    │   │       └── TestPlanNode.tsx
+    │   │   ├── nodes/    # Flow diagram node components
+    │   │   │   ├── FeatureInputNode.tsx
+    │   │   │   ├── TestPlanGeneratorNode.tsx
+    │   │   │   ├── TestCaseGeneratorNode.tsx
+    │   │   │   └── StartTestingNode.tsx
+    │   │   ├── Layout.tsx
+    │   │   └── ApiKeyForm.tsx
     │   └── App.tsx
     └── package.json
 ```
-
-## API Endpoints
-
-TBD
 
 ## Contributing
 
@@ -118,7 +125,8 @@ TBD
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+5. Open a Pull Request with detailed documentation on changes. 
+6. Submit Pull Request and Assign/Notify a Reviewer
 
 ## License
 

@@ -1,131 +1,310 @@
-# CoverIQ Test Assistant Backend
+# CoverIQ Test Planner Backend
 
-This is the backend service for the CoverIQ Test Assistant, which provides APIs for parsing Figma designs, generating feature representations, and creating test plans and test cases.
+A FastAPI-based backend service for the CoverIQ Test Planner, providing APIs for test plan and test case generation.
 
-## Setup
+## Features
 
-1. Create a virtual environment and activate it:
+- Test plan generation from feature descriptions
+- Test case generation with BDD format
+- Figma integration for UI design analysis
+- Gemini AI integration for intelligent test generation
+- Markdown and feature file export support
+
+## Tech Stack
+
+- Python 3.9+
+- FastAPI
+- Gemini AI
+- Figma API
+- Pydantic
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.9 or higher
+- pip
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/your-org/CoverIQ-Test-Assistant.git
+cd CoverIQ-Test-Assistant/CoverIQ-BE
+```
+
+2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-2. Install dependencies:
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file in the CoverIQ-BE directory with your API keys:
-```
-FIGMA_ACCESS_TOKEN=your_figma_token_here
-GEMINI_API_KEY=your_gemini_api_key_here
-```
-
-4. Start the server:
+4. Set up environment variables:
 ```bash
-uvicorn app.main:app --reload
+cp .env.example .env
+# Edit .env with your API keys:
+# FIGMA_ACCESS_TOKEN=your_figma_token_here
+# GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-The server will start at `http://localhost:8000`
+5. Start the development server:
+```bash
+uvicorn main:app --reload
+```
+
+The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
-### Environment Variables
+### Environment Setup
 
-#### Update Environment Variables
-```bash
-curl -X POST http://localhost:8000/update-env \
-  -H "Content-Type: application/json" \
-  -d '{
+#### Update API Keys
+```http
+POST /update-env
+Content-Type: application/json
+
+{
     "figma_token": "your_figma_token",
     "gemini_key": "your_gemini_api_key"
-  }'
+}
+```
+
+Response:
+```json
+{
+    "message": "API keys updated successfully"
+}
 ```
 
 ### Figma Integration
 
 #### Parse Figma URL
-```bash
-curl -X POST http://localhost:8000/parse-figma \
-  -H "Content-Type: application/json" \
-  -d '{
+```http
+POST /parse-figma
+Content-Type: application/json
+
+{
     "figma_url": "https://www.figma.com/file/your_file_key/your_file_name"
-  }'
+}
+```
+
+Response:
+```json
+{
+    "file_key": "string",
+    "file_name": "string",
+    "nodes": [
+        {
+            "id": "string",
+            "name": "string",
+            "type": "string",
+            "children": []
+        }
+    ]
+}
 ```
 
 ### Feature Representation
 
 #### Get Feature Representation
-```bash
-curl -X POST http://localhost:8000/get-feature-representation \
-  -H "Content-Type: application/json" \
-  -d '{
+```http
+POST /get-feature-representation
+Content-Type: application/json
+
+{
     "figma_data": {
-      // Figma data from parse-figma endpoint
+        "file_key": "string",
+        "file_name": "string",
+        "nodes": []
     },
     "feature_description": "Optional feature description"
-  }'
+}
+```
+
+Response:
+```json
+{
+    "features": [
+        {
+            "name": "string",
+            "description": "string",
+            "components": []
+        }
+    ]
+}
 ```
 
 ### Test Plan Generation
 
 #### Generate Test Plan
-```bash
-curl -X POST http://localhost:8000/generate-test-plan \
-  -H "Content-Type: application/json" \
-  -d '{
-    "feature_list": {
-      // Feature list from get-feature-representation endpoint
-    }
-  }'
+```http
+POST /data/plan
+Content-Type: application/json
+
+{
+    "feature_desc": "string"
+}
 ```
+
+Response:
+```json
+{
+    "test_plan": {
+        "objectives": [],
+        "overview": "string",
+        "scope": [],
+        "test_items": [],
+        "test_types": [],
+        "test_approach": "string",
+        "acceptance_criteria": []
+    }
+}
+```
+
+#### Download Test Plan (Markdown)
+```http
+GET /data/plan/markdown
+```
+
+Response: Markdown file with Content-Disposition header
 
 ### Test Case Generation
 
 #### Generate Test Cases
-```bash
-curl -X POST http://localhost:8000/generate-test-cases \
-  -H "Content-Type: application/json" \
-  -d '{
+```http
+POST /data/cases
+Content-Type: application/json
+
+{
     "test_plan": {
-      // Test plan from generate-test-plan endpoint
+        "objectives": [],
+        "overview": "string",
+        "scope": [],
+        "test_items": [],
+        "test_types": [],
+        "test_approach": "string",
+        "acceptance_criteria": []
     }
-  }'
+}
 ```
+
+Response:
+```json
+{
+    "test_cases": [
+        {
+            "feature": "string",
+            "scenarios": [
+                {
+                    "name": "string",
+                    "description": "string",
+                    "given": [],
+                    "when": [],
+                    "then": []
+                }
+            ]
+        }
+    ]
+}
+```
+
+#### Download Test Cases (Markdown)
+```http
+GET /data/cases/markdown
+```
+
+Response: Markdown file with Content-Disposition header
+
+#### Download Test Cases (Feature File)
+```http
+GET /data/cases/feature
+```
+
+Response: .feature file with Content-Disposition header
 
 ### Data Retrieval
 
-The backend automatically saves the results of each operation to JSON files in the `data` directory. You can retrieve this data using the following GET endpoints:
-
 #### Get Figma Data
-```bash
-curl http://localhost:8000/data/figma
+```http
+GET /data/figma
+```
+
+Response:
+```json
+{
+    "file_key": "string",
+    "file_name": "string",
+    "nodes": []
+}
 ```
 
 #### Get Feature List
-```bash
-curl http://localhost:8000/data/feature
+```http
+GET /data/feature
+```
+
+Response:
+```json
+{
+    "features": [
+        {
+            "name": "string",
+            "description": "string",
+            "components": []
+        }
+    ]
+}
 ```
 
 #### Get Test Plan
-```bash
-curl http://localhost:8000/data/plan
+```http
+GET /data/plan
+```
+
+Response:
+```json
+{
+    "test_plan": {
+        "objectives": [],
+        "overview": "string",
+        "scope": [],
+        "test_items": [],
+        "test_types": [],
+        "test_approach": "string",
+        "acceptance_criteria": []
+    }
+}
 ```
 
 #### Get Test Cases
-```bash
-curl http://localhost:8000/data/cases
+```http
+GET /data/cases
 ```
 
-## Data Storage
-
-All data is automatically saved to JSON files in the `data` directory:
-- `figma_data.json`: Raw Figma data
-- `feature_list.json`: Feature representation
-- `test_plan.json`: Generated test plan
-- `test_cases.json`: Generated test cases
-
-The data is saved after each successful operation and can be retrieved using the corresponding GET endpoints.
+Response:
+```json
+{
+    "test_cases": [
+        {
+            "feature": "string",
+            "scenarios": [
+                {
+                    "name": "string",
+                    "description": "string",
+                    "given": [],
+                    "when": [],
+                    "then": []
+                }
+            ]
+        }
+    ]
+}
+```
 
 ## Error Handling
 
@@ -135,27 +314,29 @@ The API uses standard HTTP status codes:
 - 404: Not Found (requested data file doesn't exist)
 - 500: Internal Server Error
 
-Error responses include a detail message explaining the error:
+Error responses include a detail message:
 ```json
 {
-  "detail": "Error message here"
+    "detail": "Error message here"
 }
 ```
-
-## API Documentation
-
-Once the server is running, you can access the interactive API documentation at:
-- Swagger UI: `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
 
 ## Project Structure
 
 ```
 CoverIQ-BE/
 ├── app/
-│   ├── routes.py      # API endpoints
-│   └── services.py    # Business logic
+│   ├── routes.py      # API endpoint definitions
+│   └── services.py    # Business logic and AI integration
 ├── Feature2/          # Core functionality
+├── data/             # Data storage
 ├── main.py           # FastAPI application
 └── requirements.txt  # Dependencies
-``` 
+```
+
+## Contributing
+
+1. Create a new branch for your feature
+2. Make your changes
+3. Document/update your added/modified api endpoints in this readme
+4. Submit a pull request
