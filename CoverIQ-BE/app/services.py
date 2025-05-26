@@ -82,10 +82,6 @@ class DocumentGenerator:
 
 class Feature2Service:
     def __init__(self):
-        load_dotenv()
-        self.figma_token = str(os.getenv("FIGMA_ACCESS_TOKEN"))
-        self.gemini_api_key = str(os.getenv("GEMINI_API_KEY"))
-        
         # In-memory storage
         self._storage = {
             'figma_data': None,
@@ -93,9 +89,6 @@ class Feature2Service:
             'test_plan': None,
             'test_cases': None
         }
-        
-        if not self.figma_token or not self.gemini_api_key:
-            raise ValueError("Missing required environment variables: FIGMA_ACCESS_TOKEN or GEMINI_API_KEY")
 
     def _save_to_memory(self, data: Dict[str, Any], key: str) -> None:
         """Save data to in-memory storage"""
@@ -109,11 +102,11 @@ class Feature2Service:
             raise FileNotFoundError(f"No data found for: {key}")
         return self._storage[key]
 
-    def parse_figma_url_and_get_data(self, figma_url: str) -> Dict[str, Any]:
+    def parse_figma_url_and_get_data(self, figma_url: str, figma_token: str) -> Dict[str, Any]:
         """Parse Figma URL and get file data"""
         try:
             file_key = parse_figma_url(figma_url)
-            figma_data = get_figma_file_data(file_key, self.figma_token)
+            figma_data = get_figma_file_data(file_key, figma_token)
             result = {
                 "file_key": file_key,
                 "figma_data": figma_data
@@ -132,19 +125,19 @@ class Feature2Service:
         except Exception as e:
             raise Exception(f"Error getting feature representation: {str(e)}")
 
-    def generate_test_plan_from_feature(self, feature_list: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_test_plan_from_feature(self, feature_list: Dict[str, Any], gemini_api_key: str) -> Dict[str, Any]:
         """Generate test plan from feature list"""
         try:
-            result = generate_test_plan(feature_list, self.gemini_api_key)
+            result = generate_test_plan(feature_list, gemini_api_key)
             self._save_to_memory(result, 'test_plan')
             return result
         except Exception as e:
             raise Exception(f"Error generating test plan: {str(e)}")
 
-    def generate_test_cases_from_plan(self, test_plan: Dict[str, Any]) -> Dict[str, Any]:
+    def generate_test_cases_from_plan(self, test_plan: Dict[str, Any], gemini_api_key: str) -> Dict[str, Any]:
         """Generate test cases from test plan"""
         try:
-            result = generate_test_case(test_plan, self.gemini_api_key)
+            result = generate_test_case(test_plan, gemini_api_key)
             self._save_to_memory(result, 'test_cases')
             return result
         except Exception as e:

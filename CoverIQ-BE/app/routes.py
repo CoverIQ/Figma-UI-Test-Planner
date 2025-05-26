@@ -2,8 +2,7 @@ from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
 from .services import feature2_service, update_env_file, document_generator
-import io
-import zipfile
+import os
 
 router = APIRouter()
 
@@ -27,7 +26,7 @@ class EnvUpdateRequest(BaseModel):
 @router.post("/parse-figma")
 async def parse_figma_url(request: FigmaURLRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.parse_figma_url_and_get_data(request.figma_url)
+        return feature2_service.parse_figma_url_and_get_data(request.figma_url, str(os.getenv("FIGMA_ACCESS_TOKEN")))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -44,14 +43,14 @@ async def get_feature_representation(request: FeatureDescriptionRequest) -> Dict
 @router.post("/generate-test-plan")
 async def generate_test_plan(request: TestPlanRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.generate_test_plan_from_feature(request.feature_list)
+        return feature2_service.generate_test_plan_from_feature(request.feature_list, str(os.getenv("GEMINI_API_KEY")))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/generate-test-cases")
 async def generate_test_cases(request: TestCasesRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.generate_test_cases_from_plan(request.test_plan)
+        return feature2_service.generate_test_cases_from_plan(request.test_plan, str(os.getenv("GEMINI_API_KEY")))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

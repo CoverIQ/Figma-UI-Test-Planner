@@ -20,14 +20,6 @@ A tool that automatically generates test plans and test cases from Figma designs
 - Figma Access Token
 - Google Gemini API Key
 
-## Environment Setup
-
-1. Create a `.env` file in the `CoverIQ-BE` directory with the following variables:
-```env
-GEMINI_API_KEY=your_gemini_api_key
-FIGMA_ACCESS_TOKEN=your_figma_access_token
-```
-
 ## Installation
 
 ### Backend Setup
