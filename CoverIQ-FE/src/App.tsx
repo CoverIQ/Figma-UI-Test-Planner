@@ -277,7 +277,6 @@ function TestAssistant() {
           edges={initialEdges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          fitView
           nodeTypes={nodeTypes}
           nodesDraggable={false}
           nodesConnectable={false}
@@ -287,6 +286,10 @@ function TestAssistant() {
           zoomOnScroll={false}
           zoomOnPinch
           proOptions={{ hideAttribution: true }}
+          fitView={false}
+          minZoom={0.1}
+          maxZoom={4}
+          defaultViewport={{ x: 300, y: 150, zoom: 1.4 }}
         >
           <MiniMap 
             style={{
@@ -296,6 +299,7 @@ function TestAssistant() {
               backgroundColor: 'rgba(17, 24, 39, 0.8)',
               borderRadius: '0.5rem',
             }}
+            pannable={true}
           />
           <Controls 
             showInteractive={false}
