@@ -6,7 +6,8 @@ export default function LogoDropdown() {
   const menuItems = [
     { label: 'About CoverIQ', path: '/introduction' },
     { label: 'Meet the Team', path: '/team' },
-    { label: 'CoverIQ Test Planner', path: '/products/Planner' },
+    { label: 'Figma UI Test Planner', path: '/products/Planner' },
+    { label: 'Local Unit Test Support', path: 'https://github.com/CoverIQ/CoverIQ-Test-Assistant/tree/Local-Unit-Test-Support-Demo'},
     { label: 'GitHub', path: 'https://github.com/CoverIQ', external: true },
   ];
 

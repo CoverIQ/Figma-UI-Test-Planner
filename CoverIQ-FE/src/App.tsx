@@ -113,7 +113,7 @@ function Landing() {
             href="/products/Planner"
             className="px-8 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Try the CoverIQ Test Planner
+            Try our Figma UI Test Planner
           </a>
         </div>
       </div>
@@ -319,7 +319,7 @@ function TestAssistant() {
             <span className="text-7xl font-bold tracking-tight">
               <span className="text-gray-500 hover:text-blue-500">Cover</span>
               <span className="text-gray-500 hover:text-emerald-500">IQ </span>
-              <span className="text-gray-500 hover:text-gray-300">Test Planner</span>
+              <span className="text-gray-500 hover:text-gray-300">Figma UI Test Planner</span>
             </span>
           </div>
         </div>
@@ -344,16 +344,16 @@ function Introduction() {
           <h2 className="text-2xl font-semibold mt-10 mb-4 text-blue-500">Our Products</h2>
 
           <div className="mb-8">
-            <a href='/products/Planner' className="text-xl font-semibold mb-2 text-emerald-500 hover:text-emerald-300">CoverIQ Test Planner</a>
+            <a href='/products/Planner' className="text-xl font-semibold mb-2 text-emerald-500 hover:text-emerald-300">Figma UI Test Planner</a>
             <p className="text-lg text-white text-justify">
               This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
             </p>
           </div>
 
           <div className="mb-8">
-            <a className="text-xl font-semibold mb-2 text-emerald-500">CoverIQ Unit Test Support</a>
+            <a href='https://github.com/CoverIQ/CoverIQ-Test-Assistant/tree/Local-Unit-Test-Support-Demo' className="text-xl font-semibold mb-2 text-emerald-500 hover:text-emerald-300">Local Unit Test Support</a>
             <p className="text-lg text-white text-justify">
-              An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by LLM-based root cause analysis.
+              An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by RAG.
             </p>
           </div>
 
