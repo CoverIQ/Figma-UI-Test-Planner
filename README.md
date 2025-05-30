@@ -1,16 +1,16 @@
-# CoverIQ Test Assistant
+# ![CoverIQ](Images/Header.png)
+# Figma UI Test Planner
 
-A tool that automatically generates test plans and test cases from Figma designs and feature descriptions.
+### An AI-Powered Solution that generates `Test Plans and Test Cases from Figma UI designs`. 
+#### Provided by `CoverIQ`.
 
 ## Features
-
-- Generate test plans from Figma designs
-- Create BDD-style test cases
+![Check out our:](Images/workflow.png)
 - Interactive flow-based UI
-- Real-time test plan generation
-- Support for both Figma URL and feature description inputs
+- Real-time test plan generation from Figma designs
+- Create BDD-style test cases
 - Export test plans and test cases in Markdown format
-- Export test cases in .feature file format
+- Export test cases in .feature file format to start coding automated E2E tests
 
 ## Prerequisites
 
@@ -81,35 +81,8 @@ The frontend will be available at `http://localhost:5173`
    - Test cases in Markdown format
    - Test cases in .feature file format
 
-## Project Structure
-
-```
-CoverIQ-Test-Assistant/
-├── CoverIQ-BE/
-│   ├── app/
-│   │   ├── routes.py      # API endpoint definitions
-│   │   └── services.py    # Business logic and AI integration
-│   ├── Feature2/
-│   │   ├── bdd_style_test_case_generator.py
-│   │   ├── feature_representation.py
-│   │   ├── figma_frame_parser.py
-│   │   └── llm_test_plan_generator.py
-│   ├── data/             # Data storage
-│   ├── main.py           # FastAPI application
-│   └── requirements.txt  # Dependencies
-└── CoverIQ-FE/
-    ├── src/
-    │   ├── components/
-    │   │   ├── nodes/    # Flow diagram node components
-    │   │   │   ├── FeatureInputNode.tsx
-    │   │   │   ├── TestPlanGeneratorNode.tsx
-    │   │   │   ├── TestCaseGeneratorNode.tsx
-    │   │   │   └── StartTestingNode.tsx
-    │   │   ├── Layout.tsx
-    │   │   └── ApiKeyForm.tsx
-    │   └── App.tsx
-    └── package.json
-```
+## System Workflow
+![Image unavailable.](Images/flowchart.png)
 
 ## Contributing
 
