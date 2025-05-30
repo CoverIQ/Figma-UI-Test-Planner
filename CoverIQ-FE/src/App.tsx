@@ -333,6 +333,9 @@ function Introduction() {
     <Layout>
       <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-900">
         <div className="max-w-3xl mx-auto">
+          <div className='flex justify-center items-center'>
+            <img src="../public/images/header.png" alt="Logo" className='w-100 h-32 mb-8' />
+          </div>
           <h1 className="text-3xl font-bold mb-6 text-blue-500">Welcome to CoverIQ</h1>
           <p className="text-lg mb-4 text-white italic">
             Looking for intelligent automated QA solutions? <strong>We've got you covered!</strong>
@@ -348,6 +351,9 @@ function Introduction() {
             <p className="text-lg text-white text-justify">
               This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
             </p>
+            <div className='flex justify-center items-center'>
+              <img src="../public/images/Figma-UI-Test-Planner.png" alt="Logo" className='h100 mt-4 mb-8' />
+            </div>
           </div>
 
           <div className="mb-8">
@@ -355,6 +361,9 @@ function Introduction() {
             <p className="text-lg text-white text-justify">
               An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by RAG.
             </p>
+            <div className='flex justify-center items-center'>
+              <img src="../public/images/Local-Unit-Test-Support.png" alt="Logo" className='h100 mt-4 mb-8' />
+            </div>
           </div>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4 text-blue-500">What's next?</h2>
@@ -373,6 +382,9 @@ function Team() {
     <Layout>
       <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-900">
         <div className="max-w-3xl mx-auto">
+          {/* <div className='flex justify-center items-center'>
+            <img src="../public/images/header.png" alt="Logo" className='w-100 h-32 mb-8' />
+          </div> */}
           <h1 className="text-3xl font-bold mb-6 text-blue-500">Meet the CoverIQ Core Team!</h1>
           <p className="text-lg mb-4 text-white italic">
           At CoverIQ, we're building the future of intelligent QA — one feature at a time.
