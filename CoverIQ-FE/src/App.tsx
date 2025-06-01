@@ -334,7 +334,7 @@ function Introduction() {
       <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-900">
         <div className="max-w-3xl mx-auto">
           <div className='flex justify-center items-center'>
-            <img src="../public/images/header.png" alt="Logo" className='w-100 h-32 mb-8' />
+            <img src="/images/Header.png" alt="header" className='w-100 h-32 mb-8' />
           </div>
           <h1 className="text-3xl font-bold mb-6 text-blue-500">Welcome to CoverIQ</h1>
           <p className="text-lg mb-4 text-white italic">
@@ -352,7 +352,7 @@ function Introduction() {
               This system generates structured test plans and BDD-style test cases directly from Figma UI designs and optional feature descriptions. By integrating design metadata with AI-powered test reasoning, it brings automation and clarity to the UI QA process.
             </p>
             <div className='flex justify-center items-center'>
-              <img src="../public/images/Figma-UI-Test-Planner.png" alt="Logo" className='h100 mt-4 mb-8' />
+              <img src="/images/Figma-UI-Test-Planner.png" alt="Logo" className='h100 mt-4 mb-8' />
             </div>
           </div>
 
@@ -362,7 +362,7 @@ function Introduction() {
               An intelligent assistant that automates unit test regression maintenance. By analyzing code changes and mapping them to potential test failures, it empowers teams to pinpoint change-induced bugs and update tests with precision—enhanced by RAG.
             </p>
             <div className='flex justify-center items-center'>
-              <img src="../public/images/Local-Unit-Test-Support.png" alt="Logo" className='h100 mt-4 mb-8' />
+              <img src="/images/Local-Unit-Test-Support.png" alt="Logo" className='h100 mt-4 mb-8' />
             </div>
           </div>
 
@@ -383,7 +383,7 @@ function Team() {
       <div className="min-h-screen pt-32 pb-20 px-8 bg-gray-900">
         <div className="max-w-3xl mx-auto">
           {/* <div className='flex justify-center items-center'>
-            <img src="../public/images/header.png" alt="Logo" className='w-100 h-32 mb-8' />
+            <img src="/images/header.png" alt="Logo" className='w-100 h-32 mb-8' />
           </div> */}
           <h1 className="text-3xl font-bold mb-6 text-blue-500">Meet the CoverIQ Core Team!</h1>
           <p className="text-lg mb-4 text-white italic">
