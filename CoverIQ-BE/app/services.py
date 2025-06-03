@@ -3,10 +3,10 @@ import io
 import zipfile
 from typing import Dict, Any, List, Optional, Tuple
 from dotenv import load_dotenv
-from Feature2.figma_frame_parser import parse_figma_url, get_figma_file_data
-from Feature2.feature_representation import filter_component
-from Feature2.llm_test_plan_generator import generate_test_plan
-from Feature2.bdd_style_test_case_generator import generate_test_case
+from TestPlanner.figma_frame_parser import parse_figma_url, get_figma_file_data
+from TestPlanner.feature_representation import filter_component
+from TestPlanner.llm_test_plan_generator import generate_test_plan
+from TestPlanner.bdd_style_test_case_generator import generate_test_case
 
 class DocumentGenerator:
     @staticmethod
