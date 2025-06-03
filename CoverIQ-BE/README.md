@@ -328,10 +328,11 @@ CoverIQ-BE/
 ├── app/
 │   ├── routes.py      # API endpoint definitions
 │   └── services.py    # Business logic and AI integration
-├── Feature2/          # Core functionality
-├── data/             # Data storage
-├── main.py           # FastAPI application
-└── requirements.txt  # Dependencies
+├── TestPlanner/       # Core functionality
+│   └── tests/         # Unit tests
+├── data/              # Data storage
+├── main.py            # FastAPI application
+└── requirements.txt   # Dependencies
 ```
 
 ## Contributing
