@@ -7,6 +7,7 @@ from TestPlanner.figma_frame_parser import parse_figma_url, get_figma_file_data
 from TestPlanner.feature_representation import filter_component
 from TestPlanner.llm_test_plan_generator import generate_test_plan
 from TestPlanner.bdd_style_test_case_generator import generate_test_case
+from TestPlanner.test_code_generator import generate_E2E_code,generate_feature_text
 
 class DocumentGenerator:
     @staticmethod
@@ -53,10 +54,10 @@ class DocumentGenerator:
         return markdown
 
     @staticmethod
-    def generate_feature_files(test_cases: Dict[str, Any]) -> bytes:
+    def generate_feature_files(test_cases: Dict[str, Any]) :
         """Generate feature files and return as zip bytes"""
         zip_buffer = io.BytesIO()
-        
+
         with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
             feature_count = 1
             for objective_key, objective in test_cases.items():
@@ -76,9 +77,22 @@ class DocumentGenerator:
                 # Add to zip file
                 feature_filename = f"{objective_key.lower().replace(' ', '_')}.feature"
                 zip_file.writestr(feature_filename, feature_content)
-        
+
         zip_buffer.seek(0)
         return zip_buffer.getvalue()
+    
+    @staticmethod
+    def generate_code_files(test_code: Dict[str, Any]) :
+        """Generate code files and return as zip bytes"""
+        zip_buffer = io.BytesIO()
+
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for filename,content in test_code.items():
+                zip_file.writestr(filename, content)
+        zip_buffer.seek(0)
+        return zip_buffer.getvalue()
+    
+    
 
 class Feature2Service:
     def __init__(self):
@@ -87,7 +101,9 @@ class Feature2Service:
             'figma_data': None,
             'feature_list': None,
             'test_plan': None,
-            'test_cases': None
+            'test_cases': None,
+            'test_code' :None,
+            'feature_text': None
         }
 
     def _save_to_memory(self, data: Dict[str, Any], key: str) -> None:
@@ -142,6 +158,25 @@ class Feature2Service:
             return result
         except Exception as e:
             raise Exception(f"Error generating test cases: {str(e)}")
+        
+    def generate_feature_from_case(self, test_case: Dict[str, Any]) -> list:
+        """Generate test cases from test plan"""
+        try:
+            result = generate_feature_text(test_case)
+            self._save_to_memory(result, 'feature_text')
+            return result
+        except Exception as e:
+            raise Exception(f"Error generating test cases: {str(e)}")
+    
+    def generate_test_code_from_feature(self, feature_text : List[str], gemini_api_key : str ) -> Dict[str,Any] :
+        """Generate test code from test case"""
+        try:
+            result = generate_E2E_code(feature_text, gemini_api_key)
+            self._save_to_memory(result, 'test_code')
+            return result
+        except Exception as e:
+            raise Exception(f"Error generating test cases: {str(e)}")
+        
 
     def get_saved_data(self, data_type: str) -> Dict[str, Any]:
         """Get saved data by type"""
@@ -149,7 +184,9 @@ class Feature2Service:
             'figma': 'figma_data',
             'feature': 'feature_list',
             'plan': 'test_plan',
-            'cases': 'test_cases'
+            'cases': 'test_cases',
+            '.feature':'feature_text',
+            'code' : 'test_code'
         }
         
         if data_type not in type_mapping:
@@ -163,6 +200,7 @@ def update_env_file(figma_token: str, gemini_key: str) -> Tuple[str, str]:
     os.environ["GEMINI_API_KEY"] = gemini_key
     load_dotenv(override=True)
     return os.getenv("FIGMA_ACCESS_TOKEN"), os.getenv("GEMINI_API_KEY")
+
 
 # Create a singleton instance
 feature2_service = Feature2Service()

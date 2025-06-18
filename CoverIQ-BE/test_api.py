@@ -1,7 +1,7 @@
 import requests
 import json
 import os
-from typing import Dict, Any
+from typing import Dict, Any,List
 import time
 
 BASE_URL = "http://localhost:8000"
@@ -12,7 +12,7 @@ def test_update_env() -> Dict[str, str]:
     url = f"{BASE_URL}/update-env"
     data = {
         "figma_token": "FIGMA_ACCESS_TOKEN",
-        "gemini_key": "GEMINI_API_KEY"
+        "gemini_key": "GEMINI_API"
     }
     response = requests.post(url, json=data)
     print(f"Status Code: {response.status_code}")
@@ -68,6 +68,31 @@ def test_generate_test_cases(test_plan: Dict[str, Any]) -> Dict[str, Any]:
     # print(f"Response: {json.dumps(response.json(), indent=2)}")
     return response.status_code
 
+
+def test_generate_feature_text(test_case : Dict[str,Any]) :
+    """Test generating feature file"""
+    print("\nTesting generate-feature_file endpoint...")
+    url = f"{BASE_URL}/generate-feature-text"
+    data = {
+        "test_case": test_case
+    }
+    response = requests.post(url, json=data)
+    print(f"Status Code: {response.status_code}")
+    # print(f"Response: {json.dumps(response.json(), indent=2)}")
+    return response.status_code
+
+def test_generate_test_code(feature_text: List[str]) -> Dict[str, Any]:
+    """Test generating test cases"""
+    print("\nTesting generate-test-code endpoint...")
+    url = f"{BASE_URL}/generate-test-code"
+    data = {
+        "feature_text": feature_text 
+    }
+    response = requests.post(url, json=data)
+    print(f"Status Code: {response.status_code}")
+    # print(f"Response: {json.dumps(response.json(), indent=2)}")
+    return response.status_code
+
 def test_get_saved_data(data_type: str) -> Dict[str, Any]:
     """Test getting saved data"""
     print(f"\nTesting get-saved-data endpoint for {data_type}...")
@@ -76,6 +101,7 @@ def test_get_saved_data(data_type: str) -> Dict[str, Any]:
     print(f"Status Code: {response.status_code}")
     # print(f"Response: {json.dumps(response.json(), indent=2)}")
     return response.status_code
+
 
 def run_all_tests():
     """Run all API tests in sequence"""
@@ -100,9 +126,14 @@ def run_all_tests():
         test_cases_response = test_generate_test_cases(test_plan_response)
         time.sleep(1)
 
+        feature_text_response = test_generate_feature_text(test_cases_response)
+        time.sleep(1)
+
+        testcode_response = test_generate_test_code(feature_text_response)
+
         # Test getting saved data
         print("\nTesting all saved data retrieval...")
-        for data_type in ['figma', 'feature', 'plan', 'cases']:
+        for data_type in ['figma', 'feature', 'plan', 'cases','.feature','code']:
             test_get_saved_data(data_type)
             time.sleep(1)
 

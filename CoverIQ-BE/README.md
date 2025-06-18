@@ -227,6 +227,63 @@ GET /data/cases/feature
 
 Response: .feature file with Content-Disposition header
 
+#### Generate Feature Text
+```http
+POST /generate-feature-text
+Content-Type: application/json
+
+{
+    "test_cases": [
+        {
+            "feature": "string",
+            "scenarios": [
+                {
+                    "name": "string",
+                    "description": "string",
+                    "given": [],
+                    "when": [],
+                    "then": []
+                }
+            ]
+        }
+    ]
+}
+```
+Response: List for next step(generate test code)
+
+
+#### Generate Test Code
+```http
+POST /generate-test-code
+Content-Type: List 
+```
+
+Response:
+```json
+{
+    "test_code_for_case1.py" : "string" 
+}
+```
+
+#### Download Test Code (Python)
+```http
+GET /data/code
+```
+
+Response: python file with Content-Disposition header
+
+#### Upload .feature File
+```http
+POST /upload-feature-file
+Content-Type :File
+```
+Response:
+```json
+{
+    "message": "n feature files uploaded successfully."
+}
+```
+
 ### Data Retrieval
 
 #### Get Figma Data
@@ -303,6 +360,25 @@ Response:
             ]
         }
     ]
+}
+```
+
+#### Get Feature Text
+```http
+GET /data/.feature
+```
+
+Response: Feature Text List
+
+#### Get Test Code
+```http
+GET /data/code
+```
+
+Response:
+```json
+{
+    "test_code_for_case1.py" : "string" 
 }
 ```
 
