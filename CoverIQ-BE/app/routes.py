@@ -24,7 +24,7 @@ class EnvUpdateRequest(BaseModel):
     gemini_key: str
 
 class TestCodeRequest(BaseModel):
-    feature_text: List[str]
+    feature_text: Dict[str,Any]
 
 class FeatureTextRequest(BaseModel):
     test_case: Dict[str,Any]
@@ -62,7 +62,7 @@ async def generate_test_cases(request: TestCasesRequest) -> Dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/generate-feature-text")
-async def generate_feature_text(request: FeatureTextRequest) -> list:
+async def generate_feature_text(request: FeatureTextRequest) -> Dict[str,Any]:
     try:
         return feature2_service.generate_feature_from_case(request.test_case)
     except Exception as e:
@@ -151,16 +151,18 @@ from fastapi import UploadFile, File
 @router.post("/upload-feature-file")
 async def upload_feature_files(files: List[UploadFile] = File(...)) -> Dict[str, Any]:
     try:
-        feature_text_list = []
-
+        feature_text_dict = {}
+        feature_text_count = 1
         for file in files:
             content = await file.read()
-            feature_text_list.append(content.decode('utf-8'))  
+            name = 'text'+str(feature_text_count)
+            feature_text_count+=1
+            feature_text_dict[name] = content.decode('utf-8')
 
         ### use upload file to replace old feature text
-        feature2_service._save_to_memory(feature_text_list, 'feature_text')
+        feature2_service._save_to_memory(feature_text_dict, 'feature_text')
 
-        return {"message": f"{len(feature_text_list)} feature files uploaded successfully."}
+        return {"message": f"{len(feature_text_dict)} feature files uploaded successfully."}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

@@ -249,7 +249,12 @@ Content-Type: application/json
     ]
 }
 ```
-Response: List for next step(generate test code)
+Response:
+ ```json
+{
+    "text1" : "string" 
+}
+```
 
 
 #### Generate Test Code
@@ -283,6 +288,8 @@ Response:
     "message": "n feature files uploaded successfully."
 }
 ```
+When new .feature files are uploaded, they will replace any previously stored .feature files in memory.
+This means that previously uploaded files will be overwritten and no longer retained.
 
 ### Data Retrieval
 

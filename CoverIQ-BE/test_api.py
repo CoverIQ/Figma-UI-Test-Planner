@@ -16,7 +16,7 @@ def test_update_env() -> Dict[str, str]:
     }
     response = requests.post(url, json=data)
     print(f"Status Code: {response.status_code}")
-    print(f"Response: {response.json()}")
+    # print(f"Response: {response.json()}")
     return response.json()
 
 def test_parse_figma() -> Dict[str, Any]:
@@ -69,7 +69,7 @@ def test_generate_test_cases(test_plan: Dict[str, Any]) -> Dict[str, Any]:
     return response.status_code
 
 
-def test_generate_feature_text(test_case : Dict[str,Any]) :
+def test_generate_feature_text(test_case : Dict[str,Any])-> Dict[str,Any] :
     """Test generating feature file"""
     print("\nTesting generate-feature_file endpoint...")
     url = f"{BASE_URL}/generate-feature-text"
@@ -81,8 +81,8 @@ def test_generate_feature_text(test_case : Dict[str,Any]) :
     # print(f"Response: {json.dumps(response.json(), indent=2)}")
     return response.status_code
 
-def test_generate_test_code(feature_text: List[str]) -> Dict[str, Any]:
-    """Test generating test cases"""
+def test_generate_test_code(feature_text: Dict[str,Any]) -> Dict[str, Any]:
+    """Test generating test code"""
     print("\nTesting generate-test-code endpoint...")
     url = f"{BASE_URL}/generate-test-code"
     data = {
@@ -100,6 +100,22 @@ def test_get_saved_data(data_type: str) -> Dict[str, Any]:
     response = requests.get(url)
     print(f"Status Code: {response.status_code}")
     # print(f"Response: {json.dumps(response.json(), indent=2)}")
+    return response.status_code
+
+
+def test_upload_feature_files(file_paths: list) -> Dict[str,Any]:
+    """Test uploading multiple feature files"""
+    print(f"\nTesting upload-feature-file endpoint with {len(file_paths)} files...")
+    files = [
+        ("files", (open(path, "rb"))) for path in file_paths
+    ]
+    url = f"{BASE_URL}/upload-feature-file"
+    response = requests.post(url, files=files)
+    print(f"Status Code: {response.status_code}")
+    try:
+        print(f"Response: {response.json()}")
+    except Exception:
+        print("Response is not JSON.")
     return response.status_code
 
 
@@ -148,3 +164,9 @@ if __name__ == "__main__":
     print("Starting API tests...")
     # run_all_tests() 
     env_response = test_update_env()
+    paths = [
+        "sample1.feature",
+        "sample2.feature"
+    ]
+    f = test_upload_feature_files(paths)
+    save_text = test_get_saved_data('.feature')

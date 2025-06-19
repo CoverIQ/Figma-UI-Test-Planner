@@ -66,5 +66,10 @@ fig_url: Public Figma design/file URL
 
 example figma url :https://www.figma.com/design/QVW3U2DciJIScCuUZQxdGK/test
 
+## Feature3 update 
+Generate test code for each .feature file using either the uploaded .feature files or those created from previously provided test cases.
+Each .feature file will be converted into a corresponding test code file.
+The generated test files will then be packaged into a downloadable ZIP archive.
 
+An example output test code file is shown in example.py.
 

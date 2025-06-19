@@ -159,7 +159,7 @@ class Feature2Service:
         except Exception as e:
             raise Exception(f"Error generating test cases: {str(e)}")
         
-    def generate_feature_from_case(self, test_case: Dict[str, Any]) -> list:
+    def generate_feature_from_case(self, test_case: Dict[str, Any]) -> Dict[str,Any]:
         """Generate test cases from test plan"""
         try:
             result = generate_feature_text(test_case)
@@ -168,7 +168,7 @@ class Feature2Service:
         except Exception as e:
             raise Exception(f"Error generating test cases: {str(e)}")
     
-    def generate_test_code_from_feature(self, feature_text : List[str], gemini_api_key : str ) -> Dict[str,Any] :
+    def generate_test_code_from_feature(self, feature_text : Dict[str,Any], gemini_api_key : str ) -> Dict[str,Any] :
         """Generate test code from test case"""
         try:
             result = generate_E2E_code(feature_text, gemini_api_key)
