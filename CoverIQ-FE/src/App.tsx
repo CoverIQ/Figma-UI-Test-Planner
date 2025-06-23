@@ -17,6 +17,7 @@ import FeatureInputNode from './components/nodes/FeatureInputNode';
 import TestPlanGeneratorNode from './components/nodes/TestPlanGeneratorNode';
 import TestCaseGeneratorNode from './components/nodes/TestCaseGeneratorNode';
 import StartTestingNode from './components/nodes/StartTestingNode';
+import E2ETestAutomationNode from './components/nodes/E2ETestAutomationNode';
 import Layout from './components/Layout';
 
 const nodeTypes = {
@@ -24,6 +25,7 @@ const nodeTypes = {
   testPlanGenerator: TestPlanGeneratorNode,
   testCaseGenerator: TestCaseGeneratorNode,
   startTesting: StartTestingNode,
+  e2eTestAutomation: E2ETestAutomationNode,
 };
 
 const initialEdges: Edge[] = [
@@ -88,6 +90,15 @@ const staticNodes: Node[] = [
     position: { x: 1550, y: 0 }, 
     draggable: false, 
     targetPosition: Position.Left
+  },
+  {
+    id: '7',
+    type: 'e2eTestAutomation',
+    data: {},
+    position: { x: 2100, y: 0 },
+    draggable: false,
+    targetPosition: Position.Left,
+    sourcePosition: Position.Right
   },
 ];
 
