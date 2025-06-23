@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response,UploadFile,File
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional,List
 from .services import feature2_service, update_env_file, document_generator
 import os
 
@@ -22,6 +22,13 @@ class TestCasesRequest(BaseModel):
 class EnvUpdateRequest(BaseModel):
     figma_token: str
     gemini_key: str
+
+class TestCodeRequest(BaseModel):
+    feature_text: Dict[str,Any]
+
+class FeatureTextRequest(BaseModel):
+    test_case: Dict[str,Any]
+    
 
 @router.post("/parse-figma")
 async def parse_figma_url(request: FigmaURLRequest) -> Dict[str, Any]:
@@ -54,6 +61,20 @@ async def generate_test_cases(request: TestCasesRequest) -> Dict[str, Any]:
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@router.post("/generate-feature-text")
+async def generate_feature_text(request: FeatureTextRequest) -> Dict[str,Any]:
+    try:
+        return feature2_service.generate_feature_from_case(request.test_case)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/generate-test-code")
+async def generate_test_code(request: TestCodeRequest) -> Dict[str,Any]:
+    try:
+        return feature2_service.generate_test_code_from_feature(request.feature_text, str(os.getenv("GEMINI_API_KEY")))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @router.post("/update-env")
 async def update_env(request: EnvUpdateRequest) -> Dict[str, str]:
     try:
@@ -67,7 +88,7 @@ async def update_env(request: EnvUpdateRequest) -> Dict[str, str]:
 
 @router.get("/data/{data_type}")
 async def get_saved_data(data_type: str) -> Dict[str, Any]:
-    """Get saved data by type (figma, feature, plan, cases)"""
+    """Get saved data by type (figma, feature, plan, cases, code,.feature)"""
     try:
         return feature2_service.get_saved_data(data_type)
     except FileNotFoundError as e:
@@ -120,6 +141,44 @@ async def get_test_cases_feature():
             media_type="application/zip",
             headers={
                 "Content-Disposition": "attachment; filename=test-cases.zip"
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    
+from fastapi import UploadFile, File
+
+@router.post("/upload-feature-file")
+async def upload_feature_files(files: List[UploadFile] = File(...)) -> Dict[str, Any]:
+    try:
+        feature_text_dict = {}
+        feature_text_count = 1
+        for file in files:
+            content = await file.read()
+            name = 'text'+str(feature_text_count)
+            feature_text_count+=1
+            feature_text_dict[name] = content.decode('utf-8')
+
+        ### use upload file to replace old feature text
+        feature2_service._save_to_memory(feature_text_dict, 'feature_text')
+
+        return {"message": f"{len(feature_text_dict)} feature files uploaded successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    
+
+@router.get("/data/code")    
+async def get_test_code():
+    try:
+        test_code = feature2_service.get_saved_data('code')
+        zip_bytes = document_generator.generate_code_files(test_code)
+        
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": "attachment; filename=test-code.zip"
             }
         )
     except Exception as e:

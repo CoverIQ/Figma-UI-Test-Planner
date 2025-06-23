@@ -227,6 +227,70 @@ GET /data/cases/feature
 
 Response: .feature file with Content-Disposition header
 
+#### Generate Feature Text
+```http
+POST /generate-feature-text
+Content-Type: application/json
+
+{
+    "test_cases": [
+        {
+            "feature": "string",
+            "scenarios": [
+                {
+                    "name": "string",
+                    "description": "string",
+                    "given": [],
+                    "when": [],
+                    "then": []
+                }
+            ]
+        }
+    ]
+}
+```
+Response:
+ ```json
+{
+    "text1" : "string" 
+}
+```
+
+
+#### Generate Test Code
+```http
+POST /generate-test-code
+Content-Type: List 
+```
+
+Response:
+```json
+{
+    "test_code_for_case1.py" : "string" 
+}
+```
+
+#### Download Test Code (Python)
+```http
+GET /data/code
+```
+
+Response: python file with Content-Disposition header
+
+#### Upload .feature File
+```http
+POST /upload-feature-file
+Content-Type :File
+```
+Response:
+```json
+{
+    "message": "n feature files uploaded successfully."
+}
+```
+When new .feature files are uploaded, they will replace any previously stored .feature files in memory.
+This means that previously uploaded files will be overwritten and no longer retained.
+
 ### Data Retrieval
 
 #### Get Figma Data
@@ -303,6 +367,25 @@ Response:
             ]
         }
     ]
+}
+```
+
+#### Get Feature Text
+```http
+GET /data/.feature
+```
+
+Response: Feature Text List
+
+#### Get Test Code
+```http
+GET /data/code
+```
+
+Response:
+```json
+{
+    "test_code_for_case1.py" : "string" 
 }
 ```
 
