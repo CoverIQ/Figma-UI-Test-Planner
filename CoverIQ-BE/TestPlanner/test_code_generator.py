@@ -10,7 +10,7 @@ def generate_E2E_code(feature_text : Dict[str,Any] , api_key: str )->Dict[str,An
         prompt = f''' 
 Help me generate automated E2E testing code (Please do not include markdown formatting or triple backticks. Only return plain Python code.) using Selenium WebDriver for the following Cucumber feature file.
 
-Note: This code is generated based on UI design only (from Figma). Since we do not have actual element IDs, class names, or selectors yet, please use descriptive placeholder selectors (e.g., driver.find_element(By.XPATH, "PLACEHOLDER_FOR_BUTTON")). Do not assume any implementation-specific selectors. The placeholders should reflect the purpose or label of the UI component.
+Note: This code is generated based on UI design only (from Figma). Since we do not have actual element IDs, class names, or selectors yet, please use descriptive placeholder selectors (e.g., driver.find_element(By.XPATH, "PLACEHOLDER_FOR_BUTTON")). Do not assume any implementation-specific selectors. The placeholders should reflect the purpose or label of the UI component.Once the user replaces the placeholders, the program should be able to run successfully.
 
 Cucumber feature file:
 {objective}
