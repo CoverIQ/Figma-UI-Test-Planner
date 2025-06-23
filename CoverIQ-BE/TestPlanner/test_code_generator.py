@@ -5,7 +5,7 @@ def generate_E2E_code(feature_text : Dict[str,Any] , api_key: str )->Dict[str,An
     result = {}
     result_count = 1
     for objective_key, objective in feature_text.items():
-        print(result_count)
+        # print(result_count)
         client = genai.Client(api_key=api_key)
         prompt = f''' 
 Help me generate automated E2E testing code (Please do not include markdown formatting or triple backticks. Only return plain Python code.) using Selenium WebDriver for the following Cucumber feature file.
@@ -25,7 +25,7 @@ Cucumber feature file:
         file_name = "test_code_for_case_"+str(result_count)+".py"
         result_count+=1
         result[file_name] = response.text
-        print(response.text)
+        # print(response.text)
     return result
 
 
