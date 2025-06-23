@@ -379,7 +379,7 @@ Response: Feature Text List
 
 #### Get Test Code
 ```http
-GET /data/code
+GET /data/code/py
 ```
 
 Response:

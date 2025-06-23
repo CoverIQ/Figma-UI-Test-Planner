@@ -168,7 +168,7 @@ async def upload_feature_files(files: List[UploadFile] = File(...)) -> Dict[str,
 
     
 
-@router.get("/data/code")    
+@router.get("/data/code/py")    
 async def get_test_code():
     try:
         test_code = feature2_service.get_saved_data('code')
