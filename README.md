@@ -10,7 +10,8 @@
 - Real-time test plan generation from Figma designs
 - Create BDD-style test cases
 - Export test plans and test cases in Markdown format
-- Export test cases in .feature file format to start coding automated E2E tests
+- Export test cases in .feature file format
+- Upload .feature files to generate E2E test automation code (Selenium Webdriver)
 
 ## Prerequisites
 
@@ -68,18 +69,26 @@ The frontend will be available at `http://localhost:5173`
 
 ## Usage
 
-1. Open your browser and navigate to `http://localhost:5173`
-2. In the Feature Input node:
+0. Open your browser and navigate to `http://localhost:5173`
+1. Configure your Figma Access Token and Gemini API Key (top right corner)
+2. Feature Input node:
    - Enter your feature description
    - Paste your Figma URL
+   - Click "Generate Feature Representation"
+3. Test Plan Generation Node:
    - Click "Generate Test Plan"
-3. The Test Plan node will display:
-   - Generated test plan
-   - BDD-style test cases
-4. Download options:
-   - Test plan in Markdown format
-   - Test cases in Markdown format
-   - Test cases in .feature file format
+   - Generated Test Plan can be previewed
+   - Supports JSON and Markdown format download
+4. Test Case Generation Node: 
+   - Click "Generate Test Cases"
+   - Generated BDD-style test cases can be previewed
+   - Supports JSON and Markdown format download
+5. The Start Testing Node provides the generated test cases zipped in .feature file format
+6. The E2E Test Automation node: 
+   - Select .feature file(s)
+   - Click "Upload .feature file(s)"
+   - Click "Generate E2E Testing Code"
+   - Download zipped Selenium Webdriver .py file(s)
 
 ## System Workflow
 ![Image unavailable.](Images/flowchart.png)
