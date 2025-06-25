@@ -291,7 +291,7 @@ function TestAssistant() {
           nodeTypes={nodeTypes}
           nodesDraggable={false}
           nodesConnectable={false}
-          panOnScroll
+          panOnScroll={true}
           panOnDrag={false}
           zoomOnDoubleClick
           zoomOnScroll={false}
