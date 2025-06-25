@@ -11,6 +11,8 @@ export default function E2ETestAutomationNode() {
   const [success, setSuccess] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const getGeminiKey = () => localStorage.getItem('GEMINI_API_KEY') || config.GEMINI_API_KEY;
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFiles(Array.from(e.target.files));
@@ -56,7 +58,7 @@ export default function E2ETestAutomationNode() {
     setError(null);
     try {
       // Step 1: Fetch feature_text from backend
-      const featureRes = await fetch(`${config.BACKEND_URL}/data/.feature`);
+      const featureRes = await fetch(`${config.BACKEND_URL}/data/cucumber`);
       if (!featureRes.ok) {
         throw new Error('Failed to fetch uploaded feature file(s) from server');
       }
@@ -68,7 +70,10 @@ export default function E2ETestAutomationNode() {
       const res = await fetch(`${config.BACKEND_URL}/generate-test-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feature_text: featureText }),
+        body: JSON.stringify({ 
+          feature_text: featureText,
+          gemini_key: getGeminiKey(),
+        }),
       });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
