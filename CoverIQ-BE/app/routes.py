@@ -8,6 +8,7 @@ router = APIRouter()
 
 class FigmaURLRequest(BaseModel):
     figma_url: str
+    figma_token: str
 
 class FeatureDescriptionRequest(BaseModel):
     figma_data: Dict[str, Any]
@@ -15,16 +16,19 @@ class FeatureDescriptionRequest(BaseModel):
 
 class TestPlanRequest(BaseModel):
     feature_list: Dict[str, Any]
+    gemini_key: str
 
 class TestCasesRequest(BaseModel):
     test_plan: Dict[str, Any]
+    gemini_key: str
 
 class EnvUpdateRequest(BaseModel):
     figma_token: str
     gemini_key: str
 
 class TestCodeRequest(BaseModel):
-    feature_text: Dict[str,Any]
+    feature_text: Dict[str, Any]
+    gemini_key: str
 
 class FeatureTextRequest(BaseModel):
     test_case: Dict[str,Any]
@@ -33,7 +37,7 @@ class FeatureTextRequest(BaseModel):
 @router.post("/parse-figma")
 async def parse_figma_url(request: FigmaURLRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.parse_figma_url_and_get_data(request.figma_url, str(os.getenv("FIGMA_ACCESS_TOKEN")))
+        return feature2_service.parse_figma_url_and_get_data(request.figma_url, request.figma_token)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -50,14 +54,14 @@ async def get_feature_representation(request: FeatureDescriptionRequest) -> Dict
 @router.post("/generate-test-plan")
 async def generate_test_plan(request: TestPlanRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.generate_test_plan_from_feature(request.feature_list, str(os.getenv("GEMINI_API_KEY")))
+        return feature2_service.generate_test_plan_from_feature(request.feature_list, request.gemini_key)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/generate-test-cases")
 async def generate_test_cases(request: TestCasesRequest) -> Dict[str, Any]:
     try:
-        return feature2_service.generate_test_cases_from_plan(request.test_plan, str(os.getenv("GEMINI_API_KEY")))
+        return feature2_service.generate_test_cases_from_plan(request.test_plan, request.gemini_key)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -71,7 +75,7 @@ async def generate_feature_text(request: FeatureTextRequest) -> Dict[str,Any]:
 @router.post("/generate-test-code")
 async def generate_test_code(request: TestCodeRequest) -> Dict[str,Any]:
     try:
-        return feature2_service.generate_test_code_from_feature(request.feature_text, str(os.getenv("GEMINI_API_KEY")))
+        return feature2_service.generate_test_code_from_feature(request.feature_text, request.gemini_key)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
