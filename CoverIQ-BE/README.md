@@ -372,7 +372,7 @@ Response:
 
 #### Get Feature Text
 ```http
-GET /data/.feature
+GET /data/cucumber
 ```
 
 Response: Feature Text List

@@ -92,7 +92,7 @@ async def update_env(request: EnvUpdateRequest) -> Dict[str, str]:
 
 @router.get("/data/{data_type}")
 async def get_saved_data(data_type: str) -> Dict[str, Any]:
-    """Get saved data by type (figma, feature, plan, cases, code,.feature)"""
+    """Get saved data by type (figma, feature, plan, cases, code, cucumber)"""
     try:
         return feature2_service.get_saved_data(data_type)
     except FileNotFoundError as e:

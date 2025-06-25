@@ -185,7 +185,7 @@ class Feature2Service:
             'feature': 'feature_list',
             'plan': 'test_plan',
             'cases': 'test_cases',
-            '.feature':'feature_text',
+            'cucumber':'feature_text',
             'code' : 'test_code'
         }
         
