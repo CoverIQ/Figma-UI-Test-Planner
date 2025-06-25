@@ -1,5 +1,6 @@
 import { Handle, Position } from 'reactflow';
 import { useState } from 'react';
+import config from '../../config.json'
 
 interface FigmaData {
   file_key: string;
@@ -34,6 +35,8 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [isGenerated, setIsGenerated] = useState(false);
 
+  const getFigmaToken = () => localStorage.getItem('FIGMA_ACCESS_TOKEN') || config.FIGMA_ACCESS_TOKEN;
+
   const validateFigmaUrl = (url: string): boolean => {
     const figmaUrlPattern = /^https:\/\/www\.figma\.com\/(file|design)\/[a-zA-Z0-9]+/;
     return figmaUrlPattern.test(url);
@@ -66,10 +69,13 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:8000/parse-figma', {
+      const res = await fetch(`${config.BACKEND_URL}/parse-figma`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ figma_url: localFigmaUrl }),
+        body: JSON.stringify({
+          figma_url: localFigmaUrl,
+          figma_token: getFigmaToken(),
+        }),
       });
 
       if (!res.ok) {
@@ -94,7 +100,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
     if (!extractedData) return;
 
     try {
-      const res = await fetch('http://localhost:8000/data/figma', {
+      const res = await fetch(`${config.BACKEND_URL}/data/figma`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -120,7 +126,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
 
   const handleDownloadFeature = async () => {
     try {
-      const res = await fetch('http://localhost:8000/data/feature', {
+      const res = await fetch(`${config.BACKEND_URL}/data/feature`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -150,7 +156,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
     setIsGenerating(true);
     setGenerationError(null);
     try {
-      const figmaRes = await fetch('http://localhost:8000/data/figma', {
+      const figmaRes = await fetch(`${config.BACKEND_URL}/data/figma`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -161,7 +167,7 @@ export default function FeatureInputNode({ data }: FeatureInputNodeProps) {
 
       const figmaData = await figmaRes.json();
 
-      const res = await fetch('http://localhost:8000/get-feature-representation', {
+      const res = await fetch(`${config.BACKEND_URL}/get-feature-representation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

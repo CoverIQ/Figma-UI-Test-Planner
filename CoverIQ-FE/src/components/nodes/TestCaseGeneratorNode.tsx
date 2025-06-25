@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import type { NodeProps } from 'reactflow';
+import config from '../../config.json'
 
 interface TestCaseGeneratorNodeData {
   isTestPlanReady: boolean;
@@ -31,11 +32,13 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
   const [testCases, setTestCases] = useState<TestCases | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
+  const getGeminiKey = () => localStorage.getItem('GEMINI_API_KEY') || config.GEMINI_API_KEY;
+
   const handleGenerate = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const planRes = await fetch('http://localhost:8000/data/plan', {
+      const planRes = await fetch(`${config.BACKEND_URL}/data/plan`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -46,13 +49,14 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
 
       const planData = await planRes.json();
 
-      const response = await fetch('http://localhost:8000/generate-test-cases', {
+      const response = await fetch(`${config.BACKEND_URL}/generate-test-cases`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          test_plan: planData
+          test_plan: planData,
+          gemini_key: getGeminiKey(),
         }),
       });
 
@@ -75,7 +79,7 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
 
   const handleDownload = async () => {
     try {
-      const res = await fetch('http://localhost:8000/data/cases', {
+      const res = await fetch(`${config.BACKEND_URL}/data/cases`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -101,7 +105,7 @@ export default function TestCaseGeneratorNode({ data }: NodeProps<TestCaseGenera
 
   const handleDownloadMarkdown = async () => {
     try {
-      const response = await fetch('http://localhost:8000/data/cases/markdown', {
+      const response = await fetch(`${config.BACKEND_URL}/data/cases/markdown`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });

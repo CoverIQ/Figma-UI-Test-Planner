@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import type { NodeProps } from 'reactflow';
+import config from '../../config.json';
 
 interface StartTestingNodeData {
   isTestCasesReady: boolean;
@@ -12,7 +13,7 @@ export default function StartTestingNode({ data }: NodeProps<StartTestingNodeDat
   const handleDownloadFeature = async () => {
     setError(null); // Clear any existing error
     try {
-      const response = await fetch('http://localhost:8000/data/cases/feature', {
+      const response = await fetch(`${config.BACKEND_URL}/data/cases/feature`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });

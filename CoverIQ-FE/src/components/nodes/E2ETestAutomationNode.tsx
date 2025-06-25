@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Handle, Position } from 'reactflow';
+import config from '../../config.json'
 
 export default function E2ETestAutomationNode() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -34,7 +35,7 @@ export default function E2ETestAutomationNode() {
     try {
       const formData = new FormData();
       selectedFiles.forEach(file => formData.append('files', file));
-      const res = await fetch('http://localhost:8000/upload-feature-file', {
+      const res = await fetch(`${config.BACKEND_URL}/upload-feature-file`, {
         method: 'POST',
         body: formData,
       });
@@ -55,7 +56,7 @@ export default function E2ETestAutomationNode() {
     setError(null);
     try {
       // Step 1: Fetch feature_text from backend
-      const featureRes = await fetch('http://localhost:8000/data/.feature');
+      const featureRes = await fetch(`${config.BACKEND_URL}/data/.feature`);
       if (!featureRes.ok) {
         throw new Error('Failed to fetch uploaded feature file(s) from server');
       }
@@ -64,7 +65,7 @@ export default function E2ETestAutomationNode() {
         throw new Error('No feature file(s) found on server. Please upload first.');
       }
       // Step 2: Send feature_text to generate-test-code
-      const res = await fetch('http://localhost:8000/generate-test-code', {
+      const res = await fetch(`${config.BACKEND_URL}/generate-test-code`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ feature_text: featureText }),
@@ -84,7 +85,7 @@ export default function E2ETestAutomationNode() {
 
   const handleDownloadZip = async () => {
     try {
-      const res = await fetch('http://localhost:8000/data/code/py', {
+      const res = await fetch(`${config.BACKEND_URL}/data/code/py`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/zip' },
       });

@@ -19,6 +19,7 @@ import TestCaseGeneratorNode from './components/nodes/TestCaseGeneratorNode';
 import StartTestingNode from './components/nodes/StartTestingNode';
 import E2ETestAutomationNode from './components/nodes/E2ETestAutomationNode';
 import Layout from './components/Layout';
+import config from './config.json';
 
 const nodeTypes = {
   featureInput: FeatureInputNode,
@@ -142,7 +143,7 @@ function TestAssistant() {
   const handleApiKeySave = async (figmaToken: string, geminiKey: string) => {
     try {
       console.log('Sending API keys to backend...');
-      const res = await fetch('http://localhost:8000/update-env', {
+      const res = await fetch(`${config.BACKEND_URL}/update-env`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -163,9 +164,11 @@ function TestAssistant() {
         });
         throw new Error(`Server error: ${res.status} ${res.statusText}`);
       }
-      
+
       const data = await res.json();
       console.log('API keys saved successfully:', data);
+      localStorage.setItem('FIGMA_ACCESS_TOKEN', figmaToken);
+      localStorage.setItem('GEMINI_API_KEY', geminiKey);
       alert('API keys saved successfully!');
     } catch (error) {
       console.error('API error:', error);

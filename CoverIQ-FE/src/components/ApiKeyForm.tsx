@@ -5,8 +5,8 @@ interface ApiKeyFormProps {
 }
 
 export default function ApiKeyForm({ onSave }: ApiKeyFormProps) {
-  const [figmaToken, setFigmaToken] = useState('');
-  const [geminiKey, setGeminiKey] = useState('');
+  const [figmaToken, setFigmaToken] = useState(localStorage.getItem('FIGMA_ACCESS_TOKEN') || '');
+  const [geminiKey, setGeminiKey] = useState(localStorage.getItem('GEMINI_API_KEY') || '');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {

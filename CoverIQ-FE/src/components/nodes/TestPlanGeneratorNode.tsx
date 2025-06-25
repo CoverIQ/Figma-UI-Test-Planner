@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import type { NodeProps } from 'reactflow';
+import config from '../../config.json'
 
 interface TestPlanGeneratorNodeData {
   isFeatureReady: boolean;
@@ -30,11 +31,13 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
   const [testPlan, setTestPlan] = useState<TestPlan | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
+  const getGeminiKey = () => localStorage.getItem('GEMINI_API_KEY') || config.GEMINI_API_KEY;
+
   const handleGenerate = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const featureRes = await fetch('http://localhost:8000/data/feature', {
+      const featureRes = await fetch(`${config.BACKEND_URL}/data/feature`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -45,14 +48,15 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
 
       const featureData = await featureRes.json();
 
-      const response = await fetch('http://localhost:8000/generate-test-plan', {
+      const response = await fetch(`${config.BACKEND_URL}/generate-test-plan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            feature_list: featureData
-          }),
+          feature_list: featureData,
+          gemini_key: getGeminiKey(),
+        }),
       });
 
       if (!response.ok) {
@@ -74,7 +78,7 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
 
   const handleDownload = async () => {
     try {
-      const res = await fetch('http://localhost:8000/data/plan', {
+      const res = await fetch(`${config.BACKEND_URL}/data/plan`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -100,7 +104,7 @@ export default function TestPlanGeneratorNode({ data }: NodeProps<TestPlanGenera
 
   const handleDownloadMarkdown = async () => {
     try {
-      const response = await fetch('http://localhost:8000/data/plan/markdown', {
+      const response = await fetch(`${config.BACKEND_URL}/data/plan/markdown`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
