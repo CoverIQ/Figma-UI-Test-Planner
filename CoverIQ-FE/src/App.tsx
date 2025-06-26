@@ -113,7 +113,7 @@ function Landing() {
             <span className="text-blue-500">Cover</span>
             <span className="text-emerald-500">IQ</span>
           </h1>
-          <p className="text-xl text-white mb-2">Automated Tools and Solutions that Cover Intelligent Quality Assurance </p>
+          <p className="text-xl text-white">Automated Tools and Solutions that Cover Intelligent Quality Assurance </p>
         </div>
         <div className="flex space-x-6">
           <a
@@ -134,6 +134,21 @@ function Landing() {
           >
             Figma UI Test Planner
           </a>
+        </div>
+
+        <div className="w-full max-w-4xl mt-12 px-4">
+          <div className="aspect-video">
+            <iframe
+              src="https://www.youtube.com/embed/e2_tLuOLkWw?autoplay=1&mute=1&controls=0&loop=1&playlist=e2_tLuOLkWw&enablejsapi=1"
+              width="100%"
+              height="100%"
+              title="CoverIQ Demo Video"
+              frameBorder="0"
+              allow="autoplay; mute; clipboard-write;"
+              allowFullScreen
+              className="rounded-lg shadow-lg"
+            ></iframe>
+          </div>
         </div>
       </div>
     </Layout>
